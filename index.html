@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="darkreader-lock" content="true" />
+    <meta name="description" content="Help Sporky climb Mount Zaina! An interactive 3D climbing wall simulation to master Cartesian coordinates, rise/run, and the slope-intercept equation (y = mx + b)." />
+    <title>Sporky Math: Cartesian Climbing Wall | Interactive 3D Slope Practice</title>
+    <link rel="canonical" href="https://sporkymath.com/slopes" />
+    
+    <!-- OpenGraph Metadata -->
+    <meta property="og:title" content="Sporky Math: Cartesian Climbing Wall | Interactive 3D Slope Practice" />
+    <meta property="og:description" content="Help Sporky climb Mount Zaina! An interactive 3D climbing wall simulation to master Cartesian coordinates, rise/run, and the slope-intercept equation (y = mx + b)." />
+    <meta property="og:image" content="https://sporkymath.com/og-image.png" />
+    <meta property="og:url" content="https://sporkymath.com/slopes" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sporky Math: Cartesian Climbing Wall" />
+    <meta name="twitter:description" content="Interactive 3D climbing wall simulation to learn coordinates and slope." />
+    <meta name="twitter:image" content="https://sporkymath.com/og-image.png" />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Sporky Math: Cartesian Climbing Wall",
+      "url": "https://sporkymath.com/slopes",
+      "description": "An interactive 3D climbing wall simulation to learn Cartesian coordinates, slope (rise/run), and the slope-intercept equation.",
+      "applicationCategory": "EducationalApplication",
+      "genre": "Math Practice Game",
+      "browserRequirements": "Requires WebGL support.",
+      "operatingSystem": "All"
+    }
+    </script>
+    <!-- Playful Google Font for a premium, cartoonish educational vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- 1. WELCOME SCREEN -->
+    <div id="welcome-screen" class="screen">
+      <!-- Starfield / dark space background -->
+      <div class="welcome-space-bg"></div>
+
+      <!-- Floating math symbols decoration -->
+      <div class="welcome-floating-symbols">
+        <span class="float-sym s1">+</span>
+        <span class="float-sym s2">÷</span>
+        <span class="float-sym s3">π</span>
+        <span class="float-sym s4">×</span>
+        <span class="float-sym s5">=</span>
+        <span class="float-sym s6">∑</span>
+        <span class="float-sym s7">√</span>
+        <span class="float-sym s8">∞</span>
+      </div>
+
+      <!-- Main welcome layout -->
+      <div class="welcome-container">
+        <!-- Title at top -->
+        <header class="welcome-header">
+          <h1 class="sr-only">Sporky Math - Interactive 3D Cartesian Climbing Wall & Slope Practice</h1>
+          <svg viewBox="0 0 1200 280" class="welcome-title-svg" id="welcome-title-svg">
+            <defs>
+              <!-- Gradient for Sporky (Cyan to Sky Blue) -->
+              <linearGradient id="sporky-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#7dd3fc" />
+                <stop offset="100%" stop-color="#0ea5e9" />
+              </linearGradient>
+              <!-- Gradient for Math (Golden Yellow to Red Orange) -->
+              <linearGradient id="math-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fde047" />
+                <stop offset="100%" stop-color="#f97316" />
+              </linearGradient>
+            </defs>
+            <path id="curve" d="M 80 250 Q 600 20 1120 250" fill="transparent" />
+            <text>
+              <textPath href="#curve" startOffset="50%" text-anchor="middle" class="welcome-title-text">
+                <tspan class="title-word-sporky">Sporky</tspan><tspan class="title-word-space"> </tspan><tspan class="title-word-math">Math</tspan>
+              </textPath>
+            </text>
+          </svg>
+        </header>
+
+        <!-- 3D Sporky overlay sits directly in the center foreground of the screen -->
+        <div id="welcome-sporky-container" class="welcome-sporky-overlay-fullscreen"></div>
+
+        <!-- Color Customizer Inline on Welcome Page -->
+        <div class="welcome-color-selector">
+          <span class="color-selector-label">Choose Sporky's Color:</span>
+          <div class="color-swatch-grid-welcome">
+            <button class="color-swatch-welcome active" data-color="cyan" style="background-color: #06b6d4;" title="Electric Blue"></button>
+            <button class="color-swatch-welcome" data-color="green" style="background-color: #22c55e;" title="Lime Green"></button>
+            <button class="color-swatch-welcome" data-color="pink" style="background-color: #ec4899;" title="Hot Pink"></button>
+            <button class="color-swatch-welcome" data-color="purple" style="background-color: #a855f7;" title="Royal Purple"></button>
+            <button class="color-swatch-welcome" data-color="orange" style="background-color: #f97316;" title="Sunset Orange"></button>
+            <button class="color-swatch-welcome" data-color="yellow" style="background-color: #eab308;" title="Golden Yellow"></button>
+          </div>
+        </div>
+
+        <!-- Tab button right in front of/below the blue Sporky -->
+        <button id="btn-enter-game" class="welcome-enter-tab-fullscreen">ENTER</button>
+
+        <div class="welcome-auth-prompt">
+          <button id="btn-welcome-signin" class="btn btn-secondary" style="font-size: 0.95rem; padding: 6px 20px; font-weight: 700;">Sign In / Load Progress 👤</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 2. INTERACTIVE MAP SCREEN -->
+    <div id="map-screen" class="screen hidden">
+      <header class="map-header">
+        <button id="btn-back-to-welcome" class="btn btn-secondary">&larr; Back 🏠</button>
+        <div class="map-title-container">
+          <h1 class="map-title">Sporky World Map 🗺️</h1>
+        </div>
+        <div class="map-header-controls">
+          <div id="map-coin-counter" class="coin-chip">💰 <span id="map-coins-val">0</span></div>
+          <button id="btn-open-customizer" class="btn btn-secondary">Change Color 🎨</button>
+          <div class="map-sporky-indicator-wrap">
+            <div id="map-sporky-indicator" class="mini-sporky-indicator" style="background-color: #06b6d4;"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="map-content">
+        <!-- De-saturated map background texture layer -->
+        <div class="map-bg-texture"></div>
+
+        <!-- Decorative Elements for RPG feel -->
+        <div class="map-decorations">
+          <div class="map-compass">🧭</div>
+          <div class="map-decoration land-1">🌲</div>
+          <div class="map-decoration land-2">🌴</div>
+          <div class="map-decoration land-3">🌳</div>
+          <div class="map-decoration sea-1">⛵</div>
+          <div class="map-decoration sea-2">🦑</div>
+          
+          <!-- Floating clouds drifting across the map -->
+          <div class="map-cloud cloud-1">☁️</div>
+          <div class="map-cloud cloud-2">☁️</div>
+          <div class="map-cloud cloud-3">☁️</div>
+        </div>
+
+        <!-- Connecting path lines SVG -->
+        <svg class="map-paths-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+          <!-- Winding dashed path connecting regions in geographic progression -->
+          <path d="M 320 180 C 220 200, 180 220, 120 240 C 140 330, 170 390, 200 450 C 310 440, 430 430, 550 420 C 650 370, 750 320, 850 270 C 830 210, 810 150, 800 90" 
+                fill="none" stroke="#475569" stroke-width="8" stroke-dasharray="16 12" stroke-linecap="round" />
+          <path d="M 320 180 C 220 200, 180 220, 120 240 C 140 330, 170 390, 200 450 C 310 440, 430 430, 550 420 C 650 370, 750 320, 850 270 C 830 210, 810 150, 800 90" 
+                fill="none" stroke="#f8fafc" stroke-width="3" stroke-dasharray="16 12" stroke-linecap="round" />
+        </svg>
+
+        <!-- Container for Map Nodes (positioned absolutely via CSS using percentages corresponding to SVG viewBox) -->
+        <div class="map-nodes-container">
+          <!-- Region 1: Tuscan Wheat Fields (Italy) - Level 1 -->
+          <div class="map-region-card start-region locked" style="left: 32%; top: 30%;" data-desc="🚜 <strong>Welcome to the Tuscan Wheat Fields!</strong><br/><br/>Help Sporky harvest fresh tomatoes, grapes, and golden wheat across the rolling sunny hills of Tuscany, Italy, by solving addition, subtraction, multiplication, and division problems!<br/><br/><span class='status-lock'>Coming soon!</span>">
+            <div class="region-node-circle">
+              <span class="region-icon">🚜</span>
+              <div class="region-node-status-badge">🔒</div>
+            </div>
+            <div class="region-name-tag region-name">Tuscan Fields</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge">LEVEL 1</span>
+              <h4 class="tooltip-name">Tuscan Fields</h4>
+              <p class="tooltip-subject">Arithmetic Basics</p>
+              <p class="tooltip-status">Locked (Coming Soon)</p>
+            </div>
+          </div>
+
+          <!-- Region 2: Versailles Gardens (France) - Level 2 -->
+          <div class="map-region-card locked" style="left: 12%; top: 40%;" data-desc="⚡ <strong>Versailles Electric Gardens</strong><br/><br/>Power up the grand fountains, golden gates, and electric hedges of the Palace of Versailles in France by mastering exponents, scientific notation, and radical simplification!<br/><br/><span class='status-lock'>Coming soon!</span>">
+            <div class="region-node-circle">
+              <span class="region-icon">⚡</span>
+              <div class="region-node-status-badge">🔒</div>
+            </div>
+            <div class="region-name-tag region-name">Versailles Gardens</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge">LEVEL 2</span>
+              <h4 class="tooltip-name">Versailles Gardens</h4>
+              <p class="tooltip-subject">Exponents & Radicals</p>
+              <p class="tooltip-status">Locked (Coming Soon)</p>
+            </div>
+          </div>
+
+          <!-- Region 3: Nile Valley Canals (Egypt) - Level 3 -->
+          <div class="map-region-card locked" style="left: 20%; top: 75%;" data-desc="📈 <strong>Nile Valley Canals</strong><br/><br/>Help irrigate the ancient delta farmlands of Egypt! Solve multi-step linear equations to open the lockgates and coordinate the water flow along the Nile River.<br/><br/><span class='status-lock'>Coming soon!</span>">
+            <div class="region-node-circle">
+              <span class="region-icon">📈</span>
+              <div class="region-node-status-badge">🔒</div>
+            </div>
+            <div class="region-name-tag region-name">Nile Canals</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge">LEVEL 3</span>
+              <h4 class="tooltip-name">Nile Canals</h4>
+              <p class="tooltip-subject">Linear Equations</p>
+              <p class="tooltip-status">Locked (Coming Soon)</p>
+            </div>
+          </div>
+
+          <!-- Region 4: Kyoto Bamboo Forest (Japan) - Level 4 -->
+          <div class="map-region-card locked" style="left: 55%; top: 70%;" data-desc="🌳 <strong>Kyoto Bamboo Forest</strong><br/><br/>The bamboo shoots in Kyoto, Japan, split and grow in factoring patterns! Distribute and factor expressions to help Sporky find the hidden shrines and trails.<br/><br/><span class='status-lock'>Coming soon!</span>">
+            <div class="region-node-circle">
+              <span class="region-icon">🌳</span>
+              <div class="region-node-status-badge">🔒</div>
+            </div>
+            <div class="region-name-tag region-name">Kyoto Forest</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge">LEVEL 4</span>
+              <h4 class="tooltip-name">Kyoto Forest</h4>
+              <p class="tooltip-subject">Distribution & Factoring</p>
+              <p class="tooltip-status">Locked (Coming Soon)</p>
+            </div>
+          </div>
+
+          <!-- Region 5: Incan Terrace Ruins (Peru) - Level 5 -->
+          <div class="map-region-card locked" style="left: 85%; top: 45%;" data-desc="🌀 <strong>Incan Terrace Ruins</strong><br/><br/>Explore the curved parabolic agricultural steps of Machu Picchu in Peru! Graph inequalities and solve quadratics to guide Sporky safely down the terraces.<br/><br/><span class='status-lock'>Coming soon!</span>">
+            <div class="region-node-circle">
+              <span class="region-icon">🌀</span>
+              <div class="region-node-status-badge">🔒</div>
+            </div>
+            <div class="region-name-tag region-name">Incan Terraces</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge">LEVEL 5</span>
+              <h4 class="tooltip-name">Incan Terraces</h4>
+              <p class="tooltip-subject">Quadratics & Inequalities</p>
+              <p class="tooltip-status">Locked (Coming Soon)</p>
+            </div>
+          </div>
+
+          <!-- Region 6: Himalayan Slopes (Tibet/Nepal) - Level 6 (Playable!) -->
+          <div class="map-region-card playable" style="left: 80%; top: 15%;">
+            <div class="region-node-circle">
+              <span class="region-icon">🏔️</span>
+              <div class="region-node-status-badge">🎮</div>
+            </div>
+            <div class="region-name-tag region-name-tag-top region-name">Mount Zaina</div>
+            <div class="region-name-tag region-name-tag-bottom">Slopes</div>
+            <!-- Hover Tooltip -->
+            <div class="region-tooltip">
+              <span class="tooltip-badge playable">PLAYABLE</span>
+              <h4 class="tooltip-name">Mount Zaina</h4>
+              <p class="tooltip-subject">Coordinates & Slopes</p>
+              <p class="tooltip-status playable">Play Now! 🧗‍♀️</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. GAME SCREEN (CLIMBING GAME) -->
+    <div id="game-screen" class="app-layout screen hidden">
+      <!-- Left UI Sidebar Panel -->
+      <aside id="ui-sidebar" class="sidebar-panel">
+        <div class="sidebar-scroll-content">
+          
+          <!-- Exit/Back Button to return to map -->
+          <button id="btn-back-to-map" class="btn btn-secondary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.95rem; padding: 8px 12px; margin-bottom: 4px;">
+            &larr; Exit to Map 🗺️
+          </button>
+
+          <!-- Header Bar -->
+          <header id="game-header">
+            <div class="logo-area">
+              <span class="logo-emoji">🧗‍♂️</span>
+              <div class="logo-text-wrapper" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0;">
+                <span class="logo-text">Mount Zaina</span>
+                <span id="level-indicator">Challenge 1 of 6</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <div id="game-coin-counter" class="coin-chip">💰 <span id="game-coins-val">0</span></div>
+              <div id="game-streak-counter" class="streak-chip hidden">🔥 <span id="game-streak-val">0</span></div>
+            </div>
+          </header>
+
+          <!-- Main Challenge Instruction Card -->
+          <main id="challenge-card" class="cartoon-card">
+            <h2 id="challenge-title">Find the Coordinates</h2>
+            <p id="challenge-desc">Drag Sporky to the target peg at <span class="highlight-coord" id="target-coord-display">(0, 0)</span>.</p>
+            
+            <!-- Side-by-side stats row -->
+            <div class="stats-row" style="display: flex; gap: 10px; align-items: center; justify-content: flex-start; margin-top: 10px; flex-wrap: wrap;">
+              <span id="solved-badge" class="progress-badge" style="margin-top: 0;">Solved: 0</span>
+              <div id="current-climber-coord" class="coord-tag hidden" style="margin-top: 0; width: auto; flex-grow: 1; padding: 3px 12px; font-size: 0.85rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;">
+                Sporky is at: <strong id="current-coord-text" style="margin-left: 4px;">(0, 0)</strong>
+              </div>
+            </div>
+
+            <!-- "Try another problem" button (Level 1) moved here -->
+            <button id="btn-try-another" class="btn btn-secondary hidden" style="justify-content: center; width: 100%; margin-top: 10px; font-size: 0.9rem; padding: 6px 12px;">Try another problem</button>
+          </main>
+
+          <!-- Dynamic Control Area -->
+          <section id="control-panel" class="cartoon-card">
+            
+            <!-- Controls for Level 1 (Coordinates) -->
+            <div id="controls-level-1" class="control-group">
+              <div class="coordinates-badge" style="margin-top: 8px; display: none;">
+                <span class="coord-label">X =</span> <span id="badge-x-val" class="coord-num">0</span>
+                <span class="coord-label">Y =</span> <span id="badge-y-val" class="coord-num">0</span>
+              </div>
+            </div>
+
+            <!-- Controls for Level 2 (Slope / Rise-Run) -->
+            <div id="controls-level-2" class="control-group hidden">
+              <p class="control-instruction">Tap and drag slowly directly on the wall. Move Sporky to the correct peg using the given slope!</p>
+              
+              <!-- Target Slope display -->
+              <div class="target-slope-card" style="text-align: center; background: #f8fafc; border: 3px solid var(--color-border); border-radius: 12px; padding: 10px; font-weight: 700; font-size: 1.15rem; margin-bottom: 4px;">
+                Given Slope:<br/>
+                <span class="slope-color" style="font-size: 1.25rem;">m = Rise/Run = <span id="target-slope-display">0 / 1</span></span>
+              </div>
+
+              <!-- Coordinates Badge -->
+              <div class="coordinates-badge" style="margin-top: 4px; margin-bottom: 4px;">
+                <span class="coord-label">X =</span> <span id="badge-x-val-lvl2" class="coord-num">0</span>
+                <span class="coord-label">Y =</span> <span id="badge-y-val-lvl2" class="coord-num">0</span>
+              </div>
+
+              <div style="display: flex; gap: 10px; width: 100%; margin-top: 5px;">
+                <button id="btn-reset-slope" class="btn btn-secondary" style="flex-grow: 1; justify-content: center;">Reset Route</button>
+                <button id="btn-submit-slope" class="btn btn-primary btn-pulse" style="flex-grow: 2; justify-content: center;">Submit Position</button>
+              </div>
+            </div>
+
+            <!-- Controls for Level 3 (Calculate Slope) -->
+            <div id="controls-level-3" class="control-group hidden">
+              <p class="control-instruction">Drag Sporky to the stop peg, then calculate and type the slope (Rise and Run)!</p>
+              
+              <div class="slope-calculator-inputs" style="background: #f8fafc; border: 3px solid var(--color-border); border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span class="coord-label" style="color: var(--color-rise, #eab308); font-weight: 700;">Rise (Δy) [up/down]:</span>
+                  <input type="number" id="input-rise-lvl3" class="cartoon-number-input" placeholder="0" style="width: 70px; padding: 6px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.1rem; text-align: center;" />
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span class="coord-label" style="color: var(--color-run, #22c55e); font-weight: 700;">Run (Δx) [left/right]:</span>
+                  <input type="number" id="input-run-lvl3" class="cartoon-number-input" placeholder="1" style="width: 70px; padding: 6px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.1rem; text-align: center;" />
+                </div>
+              </div>
+
+              <!-- Coordinates Badge -->
+              <div class="coordinates-badge" style="margin-top: 4px; margin-bottom: 4px;">
+                <span class="coord-label">X =</span> <span id="badge-x-val-lvl3" class="coord-num">0</span>
+                <span class="coord-label">Y =</span> <span id="badge-y-val-lvl3" class="coord-num">0</span>
+              </div>
+
+              <div style="display: flex; gap: 10px; width: 100%; margin-top: 5px;">
+                <button id="btn-reset-slope-lvl3" class="btn btn-secondary" style="flex-grow: 1; justify-content: center;">Reset Route</button>
+                <button id="btn-submit-slope-lvl3" class="btn btn-primary btn-pulse" style="flex-grow: 2; justify-content: center;">Submit Slope</button>
+              </div>
+            </div>
+
+            <!-- Controls for Level 4 (Plotting the Equation) -->
+            <div id="controls-level-4" class="control-group hidden">
+              <p class="control-instruction">1. Drag Sporky to the y-intercept and click Place Peg.</p>
+              <p class="control-instruction">2. Follow the slope to the destination and click Place Peg again!</p>
+              
+              <!-- Target Equation Display -->
+              <div class="target-equation-card" style="text-align: center; background: #f8fafc; border: 3px solid var(--color-border); border-radius: 12px; padding: 10px; font-weight: 700; font-size: 1.15rem; margin-bottom: 4px;">
+                Equation to Plot:<br/>
+                <span style="font-size: 1.4rem; display: inline-block; white-space: nowrap; text-wrap: nowrap;">y = <span id="target-eq-m-display" class="run-color"></span>x <span id="target-eq-b-display" class="rise-color"></span></span>
+                <div id="slope-hint-lvl4" style="margin-top: 4px; font-size: 0.9rem; font-weight: 600; color: #64748b;"></div>
+              </div>
+
+              <!-- Coordinates Badge -->
+              <div class="coordinates-badge" style="margin-top: 4px; margin-bottom: 4px;">
+                <span class="coord-label">X =</span> <span id="badge-x-val-lvl4" class="coord-num">0</span>
+                <span class="coord-label">Y =</span> <span id="badge-y-val-lvl4" class="coord-num">0</span>
+              </div>
+
+              <!-- Action buttons -->
+              <div style="display: flex; gap: 10px; width: 100%; margin-top: 5px;">
+                <button id="btn-reset-lvl4" class="btn btn-secondary" style="flex-grow: 1; justify-content: center;">Reset Route</button>
+                <button id="btn-place-peg-lvl4" class="btn btn-primary btn-pulse" style="flex-grow: 2; justify-content: center;">Place Peg</button>
+              </div>
+            </div>
+
+            <!-- Controls for Level 5 (Slope-Intercept Setter) -->
+            <div id="controls-level-5" class="control-group hidden">
+              <p class="control-instruction">Adjust the slope (m) and y-intercept (b) to set a route passing through all yellow targets!</p>
+              
+              <div class="slope-intercept-builder">
+                <!-- Slope slider -->
+                <div class="slider-control">
+                  <div class="slider-label-row">
+                    <span class="slider-title slope-color">Slope (m):</span>
+                    <span id="slider-m-val" class="slider-num-display slope-color">1.0</span>
+                  </div>
+                  <input type="range" id="slider-m" min="-3" max="3" step="0.25" value="1.0" class="custom-slider slope-slider" />
+                </div>
+
+                <!-- Intercept slider -->
+                <div class="slider-control">
+                  <div class="slider-label-row">
+                    <span class="slider-title rise-color">Y-Intercept (b):</span>
+                    <span id="slider-b-val" class="slider-num-display rise-color">0</span>
+                  </div>
+                  <input type="range" id="slider-b" min="-4" max="4" step="1" value="0" class="custom-slider intercept-slider" />
+                </div>
+
+                <!-- Equation Overlay -->
+                <div class="equation-box">
+                  <span class="eq-main" style="display: inline-block; white-space: nowrap; text-wrap: nowrap;">y = <span id="formula-m" class="run-color"></span>x <span id="formula-b" class="rise-color">+ 0</span></span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; width: 100%; margin-top: 5px;">
+                <button id="btn-reset-intercept" class="btn btn-secondary" style="flex-grow: 1; justify-content: center;">Reset Route</button>
+                <button id="btn-climb-intercept" class="btn btn-primary btn-pulse" style="flex-grow: 2; justify-content: center;">Test Route! 🧗‍♀️</button>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- Sporky Wardrobe Preview Card -->
+          <section id="sidebar-character-card" class="cartoon-card">
+            <div class="sidebar-preview-header">Sporky's Look ❄️</div>
+            <div id="sidebar-character-canvas-container" style="height: 220px; position: relative;"></div>
+            <button id="btn-open-shop" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 0.95rem; padding: 8px 12px; margin-top: 8px; box-shadow: 2px 2px 0px var(--color-btn-shadow);">
+              Outfit Wardrobe 🛍️
+            </button>
+          </section>
+
+          <!-- Level Navigation (Back/Next footer) -->
+          <footer id="level-nav">
+            <button id="btn-prev-level" class="btn btn-nav" disabled>&larr; Back</button>
+            <button id="btn-next-level" class="btn btn-nav">Next &rarr;</button>
+          </footer>
+
+        </div>
+      </aside>
+
+      <!-- Right/Main Three.js Canvas Container -->
+      <main id="canvas-container" class="canvas-panel"></main>
+
+      <!-- Feedback & Celebratory Toast Banner (Floating over everything) -->
+      <div id="toast-banner" class="toast hidden">
+        <span class="toast-emoji">🎉</span>
+        <span id="toast-message" class="toast-text">Awesome job! Snap to the peg complete!</span>
+      </div>
+    </div>
+
+    <!-- 4. COLOR CUSTOMIZER MODAL DIALOG (Pops up when entering Sporky Land) -->
+    <div id="color-customizer-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-emoji">🎨</div>
+        <h2 class="modal-title">Choose Sporky's Color!</h2>
+        <p class="modal-desc" style="margin-bottom: 20px;">Pick a color for Sporky before starting your journey across the map!</p>
+        
+        <div class="color-swatch-grid" style="justify-content: center; margin-bottom: 25px;">
+          <button class="color-swatch active" data-color="cyan" style="background-color: #06b6d4;" title="Electric Blue"></button>
+          <button class="color-swatch" data-color="green" style="background-color: #22c55e;" title="Lime Green"></button>
+          <button class="color-swatch" data-color="pink" style="background-color: #ec4899;" title="Hot Pink"></button>
+          <button class="color-swatch" data-color="purple" style="background-color: #a855f7;" title="Royal Purple"></button>
+          <button class="color-swatch" data-color="orange" style="background-color: #f97316;" title="Sunset Orange"></button>
+          <button class="color-swatch" data-color="yellow" style="background-color: #eab308;" title="Golden Yellow"></button>
+        </div>
+
+        <button id="btn-close-customizer" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.15rem; padding: 10px;">Start Exploring 🗺️</button>
+      </div>
+    </div>
+
+    <!-- 5. LOCKED REGION DIALOG MODAL -->
+    <div id="locked-region-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div id="modal-emoji" class="modal-emoji">🚜</div>
+        <h2 id="modal-title" class="modal-title">Locked Region</h2>
+        <p id="modal-desc" class="modal-desc">Details about this region...</p>
+        <button id="modal-close-btn" class="btn btn-primary" style="width: 100%; margin-top: 15px; justify-content: center;">Close</button>
+      </div>
+    </div>
+
+    <!-- 6. USER AUTHENTICATION DIALOG MODAL -->
+    <div id="auth-modal" class="modal-overlay hidden">
+      <div class="modal-card auth-card">
+        <button id="auth-close-btn" class="modal-close-x">&times;</button>
+        <div class="auth-emoji">👤</div>
+        <h2 id="auth-modal-title" class="modal-title">Sign In</h2>
+        
+        <!-- Tab buttons -->
+        <div class="auth-tabs">
+          <button id="tab-signin" class="auth-tab-btn active">Sign In</button>
+          <button id="tab-signup" class="auth-tab-btn">Sign Up</button>
+        </div>
+
+        <!-- Form fields -->
+        <form id="auth-form" class="auth-form">
+          <div class="form-group" style="text-align: left; margin-bottom: 15px;">
+            <label for="auth-email" class="form-label" style="font-weight: 700; color: var(--color-border); font-size: 0.95rem; margin-bottom: 4px; display: block;">Email Address:</label>
+            <input type="email" id="auth-email" class="cartoon-text-input" placeholder="sporky@math.com" required style="width: 100%; padding: 10px; border: 3px solid var(--color-border); border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: 600;" />
+          </div>
+          <div class="form-group" style="text-align: left; margin-bottom: 18px;">
+            <label for="auth-password" class="form-label" style="font-weight: 700; color: var(--color-border); font-size: 0.95rem; margin-bottom: 4px; display: block;">Password:</label>
+            <input type="password" id="auth-password" class="cartoon-text-input" placeholder="••••••••" required style="width: 100%; padding: 10px; border: 3px solid var(--color-border); border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: 600;" />
+          </div>
+          
+          <!-- Alert feedback messages -->
+          <div id="auth-feedback" class="auth-feedback-alert hidden" style="background: #fef2f2; border: 2.5px solid #ef4444; border-radius: 10px; padding: 8px 12px; margin-bottom: 15px; font-weight: 700; font-size: 0.9rem; color: #b91c1c; text-align: left;"></div>
+
+          <button type="submit" id="btn-auth-submit" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.15rem; padding: 10px;">Sign In 🚀</button>
+        </form>
+
+        <!-- Forgot password trigger -->
+        <div class="auth-footer" style="margin-top: 15px; border-top: 2px dashed #cbd5e1; padding-top: 10px;">
+          <button id="btn-forgot-password" class="btn-link-forgot" style="background: none; border: none; color: var(--color-slope); font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: underline;">Forgot Password?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. OUTFIT WARDROBE SHOP DIALOG MODAL -->
+    <div id="outfit-shop-modal" class="modal-overlay hidden">
+      <div class="modal-card shop-modal-card">
+        <button id="shop-close-btn" class="modal-close-x">&times;</button>
+        <div class="modal-emoji">🛍️</div>
+        <h2 class="modal-title">Mt. Zaina's Winter Shop</h2>
+        <div class="shop-coin-balance">Balance: 💰 <span id="shop-coins-val">0</span></div>
+        
+        <div class="shop-tabs">
+          <button id="tab-shop-buy" class="shop-tab active">Mt. Zaina Shop 🛍️</button>
+          <button id="tab-shop-closet" class="shop-tab">My Closet 🚪</button>
+        </div>
+        
+        <div id="shop-outfits-grid" class="shop-grid">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
