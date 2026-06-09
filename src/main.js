@@ -7,7 +7,25 @@ import { getClimberGroup, updateClimber, setClimberPosition } from './engine/cli
 import { getHolds, updateCoordinateLabel, isInsideMountain } from './engine/wall.js';
 import { initNavigation } from './interactive/navigation.js';
 import { initWelcomeSporky, stopWelcomeSporky } from './engine/welcomeSporky.js';
+import { startSession } from './lib/sessionTracker.js';
+import { initAdmin, setupRefresh } from './admin/adminController.js';
 import './style.css'; // Load stylesheet
+
+// Check for /admin route — show admin dashboard instead of game
+const isAdminPath = window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/');
+if (isAdminPath) {
+  const adminScreen = document.getElementById('admin-screen');
+  const welcomeScreen = document.getElementById('welcome-screen');
+  if (adminScreen && welcomeScreen) {
+    welcomeScreen.classList.add('hidden');
+    adminScreen.classList.remove('hidden');
+    initAdmin();
+    setupRefresh();
+  }
+} else {
+  // Start session tracking for non-admin visitors
+  startSession();
+}
 
 // Select canvas container
 const container = document.getElementById('canvas-container');

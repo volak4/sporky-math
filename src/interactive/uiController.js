@@ -3,6 +3,7 @@ import { changeLevel, resetLevel, getGameState, submitSlopePosition, submitLevel
 import { levels } from '../levels/levelData.js';
 import { getLocalSolvedCount, getCoins, purchaseOutfit, equipOutfit, getPurchasedOutfits, getActiveOutfit, getStreak } from '../lib/progressManager.js';
 import { OUTFITS_DATA } from '../engine/outfits.js';
+import { trackLevelChange } from '../lib/sessionTracker.js';
 import { playPurchaseSound } from '../engine/audio.js';
 import { updateSidebarCharacterOutfit } from '../engine/sidebarCharacter.js';
 import { updateClimberOutfit } from '../engine/climber.js';
@@ -94,10 +95,14 @@ function bindEvents() {
   elements.btnPrev.addEventListener('click', () => {
     hideToast();
     changeLevel(-1);
+    const state = getGameState();
+    trackLevelChange(state.levelIndex);
   });
   elements.btnNext.addEventListener('click', () => {
     hideToast();
     changeLevel(1);
+    const state = getGameState();
+    trackLevelChange(state.levelIndex);
   });
 
   // Level 1 - Try another coordinate

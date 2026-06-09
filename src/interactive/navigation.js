@@ -3,6 +3,7 @@ import { setWelcomeSporkyColor, resumeWelcomeSporky } from '../engine/welcomeSpo
 import { initSidebarCharacter, stopSidebarCharacter, updateSidebarCharacterColor } from '../engine/sidebarCharacter.js';
 import { updateCoinDisplays } from './uiController.js';
 import { supabase } from '../lib/supabase.js';
+import { trackScreenChange, trackLevelChange } from '../lib/sessionTracker.js';
 import { 
   getPlayerColor, 
   setPlayerColor, 
@@ -153,6 +154,7 @@ export async function initNavigation() {
         mapScreen.classList.remove('hidden');
         // Keep URL at root when on map
         history.replaceState({ screen: 'map' }, '', '/');
+        trackScreenChange('map');
       }, 150); // small delay to let the click animation play out
     });
   }
@@ -164,6 +166,7 @@ export async function initNavigation() {
       welcomeScreen.classList.remove('hidden');
       // Update URL to root
       history.replaceState({ screen: 'welcome' }, '', '/');
+      trackScreenChange('welcome');
       // Re-trigger the welcome Sporky renderer resize so it appears correctly
       resumeWelcomeSporky();
     });
@@ -176,6 +179,7 @@ export async function initNavigation() {
       mapScreen.classList.remove('hidden');
       // Update URL back to root when leaving the slopes exercise
       history.replaceState({ screen: 'map' }, '', '/');
+      trackScreenChange('map');
       
       // Stop sidebar character preview to conserve resources
       stopSidebarCharacter();
@@ -214,6 +218,8 @@ export async function initNavigation() {
         gameScreen.classList.remove('hidden');
         // Update URL to /slopes when entering the exercise
         history.replaceState({ screen: 'game' }, '', '/slopes');
+        trackScreenChange('game');
+        trackLevelChange(0);
         
         // Update Three.js Sporky color
         setClimberColor(selectedColor);

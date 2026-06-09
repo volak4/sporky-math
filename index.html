@@ -536,6 +536,123 @@
       </div>
     </div>
 
+    <!-- 8. ADMIN COMMAND CENTER -->
+    <div id="admin-screen" class="screen hidden">
+      <!-- Login Gate -->
+      <div id="admin-login-gate" class="admin-login-gate">
+        <div class="admin-login-card">
+          <div class="admin-login-icon">🛡️</div>
+          <h1 class="admin-login-title">Command Center</h1>
+          <p class="admin-login-desc">Admin access only. Sign in to view the dashboard.</p>
+          <form id="admin-login-form" class="admin-login-form">
+            <input type="email" id="admin-email" placeholder="Admin email" required autocomplete="email" />
+            <input type="password" id="admin-password" placeholder="Password" required autocomplete="current-password" />
+            <button type="submit" class="admin-login-btn">Access Dashboard 🔓</button>
+          </form>
+          <div id="admin-login-feedback" class="admin-login-feedback hidden"></div>
+        </div>
+      </div>
+
+      <!-- Dashboard (hidden until authenticated) -->
+      <div id="admin-dashboard" class="admin-dashboard hidden">
+        <!-- Top Bar -->
+        <header class="admin-topbar">
+          <div class="admin-topbar-left">
+            <span class="admin-logo">🛡️ Sporky Command Center</span>
+          </div>
+          <div class="admin-topbar-right">
+            <button id="admin-refresh-btn" class="admin-btn-refresh">↻ Refresh</button>
+            <a href="/" class="admin-btn-exit">← Back to Site</a>
+          </div>
+        </header>
+
+        <!-- Loading Overlay -->
+        <div id="admin-loading" class="admin-loading hidden">
+          <div class="admin-spinner"></div>
+          <span>Loading dashboard data...</span>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="admin-content">
+          <!-- Overview Stat Cards -->
+          <section class="admin-section">
+            <h2 class="admin-section-title">📊 Overview</h2>
+            <div class="admin-stats-grid">
+              <div class="admin-stat-card">
+                <div class="admin-stat-value" id="stat-total-users">—</div>
+                <div class="admin-stat-label">Total Users</div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-value" id="stat-active-today">—</div>
+                <div class="admin-stat-label">Active Today</div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-value" id="stat-active-week">—</div>
+                <div class="admin-stat-label">Active This Week</div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-value" id="stat-avg-duration">—</div>
+                <div class="admin-stat-label">Avg Session</div>
+              </div>
+              <div class="admin-stat-card">
+                <div class="admin-stat-value" id="stat-total-sessions">—</div>
+                <div class="admin-stat-label">Total Sessions</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Funnel Visualization -->
+          <section class="admin-section">
+            <h2 class="admin-section-title">🔻 User Funnel</h2>
+            <div class="admin-card-dark">
+              <div id="admin-funnel-bars" class="admin-funnel"></div>
+            </div>
+          </section>
+
+          <!-- User Table -->
+          <section class="admin-section">
+            <h2 class="admin-section-title">👥 Users</h2>
+            <div class="admin-card-dark">
+              <input type="text" id="admin-user-search" class="admin-search" placeholder="🔍 Search users..." />
+              <div class="admin-table-wrapper">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>User</th>
+                      <th>Last Active</th>
+                      <th>Sessions</th>
+                      <th>Time</th>
+                      <th>Max Level</th>
+                      <th>Solved</th>
+                      <th>C1/C2/C3/C4/C5</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Session Timeline -->
+          <section class="admin-section">
+            <h2 class="admin-section-title">🕐 Recent Sessions</h2>
+            <div id="admin-session-list" class="admin-session-list"></div>
+          </section>
+
+          <!-- Revenue Placeholder -->
+          <section class="admin-section">
+            <h2 class="admin-section-title">💰 Revenue</h2>
+            <div class="admin-card-dark admin-revenue-placeholder">
+              <div class="revenue-placeholder-icon">🚧</div>
+              <h3>Coming Soon</h3>
+              <p>Stripe payment integration is ready to be connected. Revenue analytics will appear here once payment processing is live.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
