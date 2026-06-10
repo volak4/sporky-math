@@ -1,10 +1,11 @@
 import { supabase } from './supabase.js';
+import { OUTFITS_DATA } from '../engine/outfits.js';
 
 let solvedCounts = [0, 0, 0, 0, 0, 0]; // 6 challenges
 let playerColor = '#06b6d4'; // Default Electric Blue/Cyan
 let coins = 0;
 let purchasedOutfits = ['jeans', 'tshirt'];
-let activeOutfit = null;
+let activeOutfits = [];
 let streakCount = 0;
 
 export function getLocalSolvedCount(index) {
@@ -51,8 +52,8 @@ export function getPurchasedOutfits() {
   return purchasedOutfits;
 }
 
-export function getActiveOutfit() {
-  return activeOutfit;
+export function getActiveOutfits() {
+  return [...activeOutfits];
 }
 
 export function purchaseOutfit(outfitId, cost) {
@@ -67,9 +68,25 @@ export function purchaseOutfit(outfitId, cost) {
 }
 
 export function equipOutfit(outfitId) {
-  if (outfitId === null || purchasedOutfits.includes(outfitId)) {
-    activeOutfit = outfitId;
-    localStorage.setItem('sporky_active_outfit', activeOutfit || '');
+  if (purchasedOutfits.includes(outfitId) && !activeOutfits.includes(outfitId)) {
+    // One item per slot: putting on a coat takes off the other coat
+    const slot = OUTFITS_DATA[outfitId]?.slot;
+    if (slot) {
+      activeOutfits = activeOutfits.filter((id) => OUTFITS_DATA[id]?.slot !== slot);
+    }
+    activeOutfits.push(outfitId);
+    localStorage.setItem('sporky_active_outfits', JSON.stringify(activeOutfits));
+    saveProgress();
+    return true;
+  }
+  return false;
+}
+
+export function unequipOutfit(outfitId) {
+  const idx = activeOutfits.indexOf(outfitId);
+  if (idx !== -1) {
+    activeOutfits.splice(idx, 1);
+    localStorage.setItem('sporky_active_outfits', JSON.stringify(activeOutfits));
     saveProgress();
     return true;
   }
@@ -124,11 +141,12 @@ export function resetLocalProgress() {
   playerColor = '#06b6d4';
   coins = 0;
   purchasedOutfits = ['jeans', 'tshirt'];
-  activeOutfit = null;
+  activeOutfits = [];
   streakCount = 0;
   localStorage.removeItem('sporky_coins');
   localStorage.removeItem('sporky_purchased_outfits');
   localStorage.removeItem('sporky_active_outfit');
+  localStorage.removeItem('sporky_active_outfits');
   localStorage.removeItem('sporky_streak');
   localStorage.removeItem('sporky_solved_counts');
 }
@@ -140,7 +158,8 @@ export async function loadProgress() {
   // Load coins, outfits, and streak from localStorage
   const localCoins = localStorage.getItem('sporky_coins');
   const localPurchased = localStorage.getItem('sporky_purchased_outfits');
-  const localActive = localStorage.getItem('sporky_active_outfit');
+  const localActive = localStorage.getItem('sporky_active_outfits');
+  const legacyActive = localStorage.getItem('sporky_active_outfit');
   const localStreak = localStorage.getItem('sporky_streak');
 
   coins = localCoins ? parseInt(localCoins, 10) || 0 : 0;
@@ -158,7 +177,22 @@ export async function loadProgress() {
     purchasedOutfits = ['jeans', 'tshirt'];
   }
 
-  activeOutfit = localActive || null;
+  if (localActive) {
+    try {
+      activeOutfits = JSON.parse(localActive) || [];
+    } catch (e) {
+      activeOutfits = [];
+    }
+  } else if (legacyActive) {
+    // Migrate from the old single-outfit storage format
+    activeOutfits = [legacyActive];
+    localStorage.setItem('sporky_active_outfits', JSON.stringify(activeOutfits));
+    localStorage.removeItem('sporky_active_outfit');
+  } else {
+    activeOutfits = [];
+  }
+  // Drop anything no longer owned (e.g. stale ids)
+  activeOutfits = activeOutfits.filter((id) => purchasedOutfits.includes(id));
 
   if (user) {
     // 1. Fetch from Supabase remote database
@@ -194,7 +228,7 @@ export async function loadProgress() {
         color: playerColor, 
         counts: [...solvedCounts],
         coins: coins,
-        activeOutfit: activeOutfit,
+        activeOutfits: [...activeOutfits],
         purchasedOutfits: purchasedOutfits
       };
     }
@@ -224,7 +258,7 @@ export async function loadProgress() {
     color: playerColor, 
     counts: [...solvedCounts],
     coins: coins,
-    activeOutfit: activeOutfit,
+    activeOutfits: [...activeOutfits],
     purchasedOutfits: purchasedOutfits
   };
 }
@@ -236,7 +270,7 @@ export async function saveProgress() {
   // Save coins, outfits, streak, and solved counts locally in all cases
   localStorage.setItem('sporky_coins', coins);
   localStorage.setItem('sporky_purchased_outfits', JSON.stringify(purchasedOutfits));
-  localStorage.setItem('sporky_active_outfit', activeOutfit || '');
+  localStorage.setItem('sporky_active_outfits', JSON.stringify(activeOutfits));
   localStorage.setItem('sporky_streak', streakCount);
   localStorage.setItem('sporky_solved_counts', JSON.stringify(solvedCounts));
 

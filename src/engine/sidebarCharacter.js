@@ -1,8 +1,8 @@
-import { getPlayerColor, getActiveOutfit } from '../lib/progressManager.js';
-import { getOutfitSVG } from './outfits.js';
+import { getPlayerColor, getActiveOutfits } from '../lib/progressManager.js';
+import { OUTFITS_DATA, getOutfitSVG } from './outfits.js';
 
 let containerElement = null;
-let activeOutfitId = null;
+let activeOutfitIds = [];
 let activeColor = '#06b6d4';
 
 /**
@@ -32,8 +32,14 @@ function render2DSporky() {
   if (!containerElement) return;
 
   const color = activeColor;
-  const outfitId = activeOutfitId;
   const darkColor = getDarkerColor(color);
+
+  // Sort worn items by layer; negative layers render behind Sporky
+  const wornIds = activeOutfitIds
+    .filter((id) => OUTFITS_DATA[id])
+    .sort((a, b) => (OUTFITS_DATA[a].layer || 0) - (OUTFITS_DATA[b].layer || 0));
+  const backIds = wornIds.filter((id) => (OUTFITS_DATA[id].layer || 0) < 0);
+  const frontIds = wornIds.filter((id) => (OUTFITS_DATA[id].layer || 0) >= 0);
 
   // Base Sporky SVG Structure
   let svgContent = `
@@ -46,6 +52,15 @@ function render2DSporky() {
         </radialGradient>
       </defs>
   `;
+
+  // 0. Draw back-layer outfits (capes, wings) behind everything
+  backIds.forEach((id) => {
+    svgContent += `
+      <g class="outfit-layer outfit-back">
+        ${getOutfitSVG(id)}
+      </g>
+    `;
+  });
 
   // 1. Draw Legs (Behind body)
   svgContent += `
@@ -100,15 +115,14 @@ function render2DSporky() {
     </g>
   `;
 
-  // 5. Draw Layered 2D Outfit (Nested SVG overlay)
-  if (outfitId) {
+  // 5. Draw front-layer outfits in stacking order (Nested SVG overlays)
+  frontIds.forEach((id) => {
     svgContent += `
-      <!-- Outfit Layer -->
-      <g id="outfit-layer">
-        ${getOutfitSVG(outfitId)}
+      <g class="outfit-layer outfit-front">
+        ${getOutfitSVG(id)}
       </g>
     `;
-  }
+  });
 
   // Close SVG Tag
   svgContent += `
@@ -126,7 +140,7 @@ export function initSidebarCharacter(container) {
   if (!container) return;
   containerElement = container;
   activeColor = getPlayerColor() || '#06b6d4';
-  activeOutfitId = getActiveOutfit() || null;
+  activeOutfitIds = getActiveOutfits();
 
   render2DSporky();
 }
@@ -141,11 +155,11 @@ export function updateSidebarCharacterColor(hexColor) {
 }
 
 /**
- * Updates Sporky's active equipped outfit in real-time
- * @param {string|null} outfitId - The active outfit ID
+ * Updates Sporky's equipped outfits in real-time
+ * @param {string[]} outfitIds - The list of equipped outfit IDs
  */
-export function updateSidebarCharacterOutfit(outfitId) {
-  activeOutfitId = outfitId;
+export function updateSidebarCharacterOutfit(outfitIds) {
+  activeOutfitIds = Array.isArray(outfitIds) ? outfitIds : (outfitIds ? [outfitIds] : []);
   render2DSporky();
 }
 

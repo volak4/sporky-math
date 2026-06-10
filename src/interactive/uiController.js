@@ -1,7 +1,7 @@
 // Controller for the HTML UI Overlays and HUD inputs
 import { changeLevel, resetLevel, getGameState, submitSlopePosition, submitLevel3Slope, testRoute, shuffleTargetCoordinate, placePegLvl4 } from '../levels/gameManager.js';
 import { levels } from '../levels/levelData.js';
-import { getLocalSolvedCount, getCoins, purchaseOutfit, equipOutfit, getPurchasedOutfits, getActiveOutfit, getStreak } from '../lib/progressManager.js';
+import { getLocalSolvedCount, getCoins, purchaseOutfit, equipOutfit, unequipOutfit, getPurchasedOutfits, getActiveOutfits, getStreak } from '../lib/progressManager.js';
 import { OUTFITS_DATA } from '../engine/outfits.js';
 import { trackLevelChange } from '../lib/sessionTracker.js';
 import { playPurchaseSound } from '../engine/audio.js';
@@ -542,13 +542,13 @@ export function renderShopGrid() {
 
   const coins = getCoins();
   const purchased = getPurchasedOutfits();
-  const activeOutfit = getActiveOutfit();
+  const activeOutfits = getActiveOutfits();
 
   let displayedCount = 0;
 
   Object.values(OUTFITS_DATA).forEach((outfit) => {
     const isPurchased = purchased.includes(outfit.id);
-    const isActive = activeOutfit === outfit.id;
+    const isActive = activeOutfits.includes(outfit.id);
 
     // Closet tab: only show owned items
     if (activeShopTab === 'closet' && !isPurchased) {
@@ -600,24 +600,18 @@ export function renderShopGrid() {
 
     btn.addEventListener('click', () => {
       if (isActive) {
-        equipOutfit(null);
-        updateOutfitEverywhere(null);
-        renderShopGrid();
-        updateCoinDisplays();
+        unequipOutfit(outfit.id);
       } else if (isPurchased) {
         equipOutfit(outfit.id);
-        updateOutfitEverywhere(outfit.id);
-        renderShopGrid();
-        updateCoinDisplays();
+      } else if (purchaseOutfit(outfit.id, outfit.price)) {
+        playPurchaseSound();
+        equipOutfit(outfit.id);
       } else {
-        if (purchaseOutfit(outfit.id, outfit.price)) {
-          playPurchaseSound();
-          equipOutfit(outfit.id);
-          updateOutfitEverywhere(outfit.id);
-          renderShopGrid();
-          updateCoinDisplays();
-        }
+        return;
       }
+      updateOutfitEverywhere();
+      renderShopGrid();
+      updateCoinDisplays();
     });
 
     card.appendChild(btn);
@@ -636,9 +630,9 @@ export function renderShopGrid() {
   }
 }
 
-function updateOutfitEverywhere(outfitId) {
-  // Update 3D previews
-  updateSidebarCharacterOutfit(outfitId);
-  updateClimberOutfit(outfitId);
-  updateWelcomeSporkyOutfit(outfitId);
+function updateOutfitEverywhere() {
+  const outfitIds = getActiveOutfits();
+  updateSidebarCharacterOutfit(outfitIds);
+  updateClimberOutfit(outfitIds);
+  updateWelcomeSporkyOutfit(outfitIds);
 }
