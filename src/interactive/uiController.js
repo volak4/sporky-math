@@ -12,6 +12,30 @@ import { updateWelcomeSporkyOutfit } from '../engine/welcomeSporky.js';
 // DOM Element Cache
 let elements = {};
 let activeShopTab = 'buy';
+let activeCategory = null;
+
+const CATEGORY_MAP = {
+  hats: {
+    name: 'Hats',
+    emoji: '❄️',
+    slots: ['hat', 'earmuffs']
+  },
+  jackets: {
+    name: 'Jackets',
+    emoji: '🧥',
+    slots: ['coat', 'scarf']
+  },
+  gloves: {
+    name: 'Gloves',
+    emoji: '🧤',
+    slots: ['mittens']
+  },
+  eyewear: {
+    name: 'Eye wear',
+    emoji: '🥽',
+    slots: ['goggles']
+  }
+};
 
 export function initUI() {
   elements = {
@@ -183,6 +207,7 @@ function bindEvents() {
   if (elements.btnOpenShop) {
     elements.btnOpenShop.addEventListener('click', () => {
       activeShopTab = 'buy';
+      activeCategory = null;
       const tabB = document.getElementById('tab-shop-buy');
       const tabC = document.getElementById('tab-shop-closet');
       if (tabB && tabC) {
@@ -213,12 +238,14 @@ function bindEvents() {
   if (tabBuy && tabCloset) {
     tabBuy.addEventListener('click', () => {
       activeShopTab = 'buy';
+      activeCategory = null;
       tabBuy.classList.add('active');
       tabCloset.classList.remove('active');
       renderShopGrid();
     });
     tabCloset.addEventListener('click', () => {
       activeShopTab = 'closet';
+      activeCategory = null;
       tabCloset.classList.add('active');
       tabBuy.classList.remove('active');
       renderShopGrid();
@@ -538,7 +565,39 @@ export function triggerFlyingCoinAnimation(startElement = null) {
 
 export function renderShopGrid() {
   if (!elements.shopOutfitsGrid) return;
+
+  if (!activeCategory) {
+    elements.shopOutfitsGrid.innerHTML = '';
+    Object.entries(CATEGORY_MAP).forEach(([key, cat]) => {
+      const card = document.createElement('div');
+      card.className = 'outfit-card category-card';
+      card.style.cursor = 'pointer';
+      card.innerHTML = `
+        <div class="outfit-emoji">${cat.emoji}</div>
+        <div class="outfit-name" style="font-size: 1.25rem; margin-top: 10px;">${cat.name}</div>
+      `;
+      card.addEventListener('click', () => {
+        activeCategory = key;
+        renderShopGrid();
+      });
+      elements.shopOutfitsGrid.appendChild(card);
+    });
+    return;
+  }
+
   elements.shopOutfitsGrid.innerHTML = '';
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn btn-secondary';
+  backBtn.style.gridColumn = '1 / -1';
+  backBtn.style.marginBottom = '10px';
+  backBtn.style.justifyContent = 'center';
+  backBtn.innerHTML = '← Back to Categories';
+  backBtn.addEventListener('click', () => {
+    activeCategory = null;
+    renderShopGrid();
+  });
+  elements.shopOutfitsGrid.appendChild(backBtn);
 
   const coins = getCoins();
   const purchased = getPurchasedOutfits();
@@ -557,6 +616,12 @@ export function renderShopGrid() {
 
     // Buy tab: only show winter outfits for Mount Zaina
     if (activeShopTab === 'buy' && outfit.shop !== 'zaina') {
+      return;
+    }
+
+    // Filter by active category's slots
+    const allowedSlots = CATEGORY_MAP[activeCategory].slots;
+    if (!allowedSlots.includes(outfit.slot)) {
       return;
     }
 
