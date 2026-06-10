@@ -1548,7 +1548,8 @@ body {
   -webkit-backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 5vh;
   z-index: 999;
 }
 
@@ -1717,7 +1718,7 @@ body {
 
 /* Shop Modal */
 .shop-modal-card {
-  width: 540px !important;
+  width: 650px !important;
   max-width: 95%;
   background: #ffffff;
   padding: 24px;
@@ -1782,7 +1783,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  max-height: 300px;
+  max-height: min(480px, 60vh);
   overflow-y: auto;
   padding-right: 6px;
   margin-top: 5px;
