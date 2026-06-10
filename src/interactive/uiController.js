@@ -567,6 +567,7 @@ export function renderShopGrid() {
   if (!elements.shopOutfitsGrid) return;
 
   if (!activeCategory) {
+    elements.shopOutfitsGrid.className = 'shop-grid category-view';
     elements.shopOutfitsGrid.innerHTML = '';
     Object.entries(CATEGORY_MAP).forEach(([key, cat]) => {
       const card = document.createElement('div');
@@ -585,6 +586,7 @@ export function renderShopGrid() {
     return;
   }
 
+  elements.shopOutfitsGrid.className = 'shop-grid item-view';
   elements.shopOutfitsGrid.innerHTML = '';
 
   const backBtn = document.createElement('button');
@@ -605,7 +607,10 @@ export function renderShopGrid() {
 
   let displayedCount = 0;
 
-  Object.values(OUTFITS_DATA).forEach((outfit) => {
+  // Sort outfits cheapest first
+  const sortedOutfits = Object.values(OUTFITS_DATA).sort((a, b) => a.price - b.price);
+
+  sortedOutfits.forEach((outfit) => {
     const isPurchased = purchased.includes(outfit.id);
     const isActive = activeOutfits.includes(outfit.id);
 

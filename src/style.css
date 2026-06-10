@@ -1718,7 +1718,7 @@ body {
 
 /* Shop Modal */
 .shop-modal-card {
-  width: 650px !important;
+  width: 900px !important;
   max-width: 95%;
   background: #ffffff;
   padding: 24px;
@@ -1781,12 +1781,19 @@ body {
 
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   max-height: min(480px, 60vh);
   overflow-y: auto;
   padding-right: 6px;
   margin-top: 5px;
+}
+
+.shop-grid.category-view {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.shop-grid.item-view {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Custom scrollbar for shop grid */
@@ -1883,7 +1890,8 @@ body {
 }
 
 @media (max-width: 580px) {
-  .shop-grid {
+  .shop-grid.category-view,
+  .shop-grid.item-view {
     grid-template-columns: 1fr;
   }
   .shop-modal-card {
