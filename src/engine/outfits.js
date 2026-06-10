@@ -68,16 +68,6 @@ export const OUTFITS_DATA = {
     slot: "scarf",
   },
   // --- Hats ---
-  temubeanie: {
-    id: "temubeanie",
-    name: "Temu Beanie",
-    emoji: "🧢",
-    price: 12,
-    description: "The pom-pom is hanging on by a single thread. Literally.",
-    shop: "zaina",
-    layer: 8,
-    slot: "hat",
-  },
   beanie: {
     id: "beanie",
     name: "South Face Beanie",
@@ -99,10 +89,10 @@ export const OUTFITS_DATA = {
     slot: "hat",
   },  cheapwinterhat: {
     id: "cheapwinterhat",
-    name: "Cheap Winter Hat",
+    name: "Temu Beanie",
     emoji: "🧢",
-    price: 5,
-    description: "A very cheap winter hat. It has a raster image inside!",
+    price: 12,
+    description: "The pom-pom is hanging on by a single thread. Literally.",
     shop: "zaina",
     layer: 8,
     slot: "hat",
@@ -494,22 +484,6 @@ export function getOutfitSVG(outfitId) {
       <line x1="120" y1="279" x2="120" y2="289" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
       <line x1="190" y1="277" x2="192" y2="287" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
       <line x1="196" y1="275" x2="199" y2="285" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
-    `;
-  } else if (outfitId === "temubeanie") {
-    content = `
-      <!-- Saggy lopsided dome -->
-      <path d="M 78 100 C 84 58 130 34 178 46 C 210 54 226 76 222 98 Q 150 82 78 100 Z" fill="#9ca3af" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
-      <!-- Droopy fold -->
-      <path d="M 96 78 Q 140 60 196 66" stroke="#6b7280" stroke-width="4" fill="none" stroke-linecap="round" />
-      <!-- Crooked brim -->
-      <path d="M 74 102 Q 150 80 226 96 L 224 112 Q 150 96 76 116 Z" fill="#6b7280" stroke="#1b222c" stroke-width="4" stroke-linejoin="round" />
-      <!-- Patch -->
-      <g transform="rotate(-7, 130, 69)">
-        <rect x="120" y="62" width="20" height="14" rx="2" fill="#f59e0b" stroke="#1b222c" stroke-width="2" />
-      </g>
-      <!-- Pom-pom dangling off the side by a thread -->
-      <path d="M 212 56 Q 226 62 230 74" stroke="#6b7280" stroke-width="2" fill="none" />
-      <circle cx="232" cy="82" r="9" fill="#d1d5db" stroke="#1b222c" stroke-width="2.5" />
     `;
   } else if (outfitId === "vermeshat") {
     content = `
