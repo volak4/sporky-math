@@ -91,7 +91,7 @@ export const OUTFITS_DATA = {
     id: "cheapwinterhat",
     name: "Temu Beanie",
     emoji: "🎁",
-    price: 12,
+    price: 2,
     description: "The pom-pom is hanging on by a single thread. Literally.",
     shop: "zaina",
     layer: 8,
