@@ -655,10 +655,10 @@ export function renderShopGrid() {
     btn.className = 'btn outfit-btn';
     
     if (isActive) {
-      btn.textContent = 'Unequip';
+      btn.textContent = 'Take off';
       btn.classList.add('equipped');
     } else if (isPurchased) {
-      btn.textContent = 'Equip';
+      btn.textContent = 'Wear';
       btn.classList.add('owned');
     } else {
       btn.textContent = 'Buy';
