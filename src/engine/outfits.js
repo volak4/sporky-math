@@ -71,7 +71,7 @@ export const OUTFITS_DATA = {
   beanie: {
     id: "beanie",
     name: "South Face Beanie",
-    emoji: "❄️",
+    emoji: "🎁",
     price: 50,
     description: "A classic winter hat topped with a fluffy white pom-pom.",
     shop: "zaina",
@@ -81,7 +81,7 @@ export const OUTFITS_DATA = {
   vermeshat: {
     id: "vermeshat",
     name: "Vermes Fur Hat",
-    emoji: "🎩",
+    emoji: "🎁",
     price: 200,
     description: "A majestic fur hat with a golden crest. Fit for summit royalty.",
     shop: "zaina",
@@ -90,7 +90,7 @@ export const OUTFITS_DATA = {
   },  cheapwinterhat: {
     id: "cheapwinterhat",
     name: "Temu Beanie",
-    emoji: "🧢",
+    emoji: "🎁",
     price: 12,
     description: "The pom-pom is hanging on by a single thread. Literally.",
     shop: "zaina",
