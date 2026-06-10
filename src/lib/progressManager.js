@@ -1,6 +1,16 @@
 import { supabase } from './supabase.js';
 import { OUTFITS_DATA } from '../engine/outfits.js';
 
+const OUTFIT_ID_MIGRATIONS = {
+  vermescoat: 'vouisluittoncoat',
+  vermesscarf: 'vouisluittonscarf',
+  vermeshat: 'vouisluittonhat',
+  vermesgoggles: 'vouisluittongoggles',
+  vermesearmuffs: 'vouisluittonearmuffs',
+  vermesmittens: 'vouisluittonmittens'
+};
+
+
 let solvedCounts = [0, 0, 0, 0, 0, 0]; // 6 challenges
 let playerColor = '#06b6d4'; // Default Electric Blue/Cyan
 let coins = 0;
@@ -168,6 +178,8 @@ export async function loadProgress() {
   if (localPurchased) {
     try {
       purchasedOutfits = JSON.parse(localPurchased) || [];
+      purchasedOutfits = purchasedOutfits.map(id => OUTFIT_ID_MIGRATIONS[id] || id);
+      purchasedOutfits = [...new Set(purchasedOutfits)];
       if (!purchasedOutfits.includes('jeans')) purchasedOutfits.push('jeans');
       if (!purchasedOutfits.includes('tshirt')) purchasedOutfits.push('tshirt');
     } catch (e) {
@@ -180,12 +192,15 @@ export async function loadProgress() {
   if (localActive) {
     try {
       activeOutfits = JSON.parse(localActive) || [];
+      activeOutfits = activeOutfits.map(id => OUTFIT_ID_MIGRATIONS[id] || id);
+      activeOutfits = [...new Set(activeOutfits)];
     } catch (e) {
       activeOutfits = [];
     }
   } else if (legacyActive) {
     // Migrate from the old single-outfit storage format
-    activeOutfits = [legacyActive];
+    const legacyMigrated = OUTFIT_ID_MIGRATIONS[legacyActive] || legacyActive;
+    activeOutfits = [legacyMigrated];
     localStorage.setItem('sporky_active_outfits', JSON.stringify(activeOutfits));
     localStorage.removeItem('sporky_active_outfit');
   } else {

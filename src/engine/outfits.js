@@ -3,7 +3,7 @@
 //   negative = drawn BEHIND Sporky (capes, wings), higher = drawn on top.
 // `slot` enforces one-per-type: equipping an item replaces any worn item
 //   sharing the same slot. Items with unique slots stack freely.
-// Brand tiers: Temu (suspiciously cheap) → South Face (solid) → Vermes (luxury).
+// Brand tiers: Temu (suspiciously cheap) → South Face (solid) → Vouis Luitton (luxury).
 export const OUTFITS_DATA = {
   // --- Coats ---
   temucoat: {
@@ -26,9 +26,9 @@ export const OUTFITS_DATA = {
     layer: 3,
     slot: "coat",
   },
-  vermescoat: {
-    id: "vermescoat",
-    name: "Vermes Overcoat",
+  vouisluittoncoat: {
+    id: "vouisluittoncoat",
+    name: "Vouis Luitton Overcoat",
     emoji: "🧥",
     price: 300,
     description: "Hand-stitched luxury with a fur collar and golden buttons.",
@@ -57,9 +57,9 @@ export const OUTFITS_DATA = {
     layer: 4,
     slot: "scarf",
   },
-  vermesscarf: {
-    id: "vermesscarf",
-    name: "Vermes Silk Scarf",
+  vouisluittonscarf: {
+    id: "vouisluittonscarf",
+    name: "Vouis Luitton Silk Scarf",
     emoji: "🧣",
     price: 150,
     description: "Spun from golden silk. Flutters dramatically in mountain wind.",
@@ -78,9 +78,9 @@ export const OUTFITS_DATA = {
     layer: 8,
     slot: "hat",
   },
-  vermeshat: {
-    id: "vermeshat",
-    name: "Vermes Fur Hat",
+  vouisluittonhat: {
+    id: "vouisluittonhat",
+    name: "Vouis Luitton Fur Hat",
     emoji: "🎁",
     price: 200,
     description: "A majestic fur hat with a golden crest. Fit for summit royalty.",
@@ -119,9 +119,9 @@ export const OUTFITS_DATA = {
     layer: 5,
     slot: "goggles",
   },
-  vermesgoggles: {
-    id: "vermesgoggles",
-    name: "Vermes Goggles",
+  vouisluittongoggles: {
+    id: "vouisluittongoggles",
+    name: "Vouis Luitton Goggles",
     emoji: "🕶️",
     price: 250,
     description: "24-karat gold frames with diamond studs. Snow glare? Never heard of it.",
@@ -150,9 +150,9 @@ export const OUTFITS_DATA = {
     layer: 6,
     slot: "earmuffs",
   },
-  vermesearmuffs: {
-    id: "vermesearmuffs",
-    name: "Vermes Earmuffs",
+  vouisluittonearmuffs: {
+    id: "vouisluittonearmuffs",
+    name: "Vouis Luitton Earmuffs",
     emoji: "💎",
     price: 100,
     description: "Cloud-soft fur on a golden arch, with a gem for each ear.",
@@ -181,9 +181,9 @@ export const OUTFITS_DATA = {
     layer: 11,
     slot: "mittens",
   },
-  vermesmittens: {
-    id: "vermesmittens",
-    name: "Vermes Mittens",
+  vouisluittonmittens: {
+    id: "vouisluittonmittens",
+    name: "Vouis Luitton Mittens",
     emoji: "🧤",
     price: 120,
     description: "Velvet-lined cashmere mittens with golden cuffs.",
@@ -424,7 +424,7 @@ export function getOutfitSVG(outfitId) {
         <text x="88" y="215" font-size="10" font-weight="bold" fill="#ef4444">-90%</text>
       </g>
     `;
-  } else if (outfitId === "vermescoat") {
+  } else if (outfitId === "vouisluittoncoat") {
     content = `
       <!-- Overcoat body -->
       <path d="M 77 165 A 75 75 0 0 0 223 165 Q 150 148 77 165 Z" fill="#881337" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -464,7 +464,7 @@ export function getOutfitSVG(outfitId) {
       <!-- Loose thread curling off -->
       <path d="M 218 196 Q 232 200 230 212 Q 228 220 236 222" stroke="#4d7c0f" stroke-width="2" fill="none" stroke-linecap="round" />
     `;
-  } else if (outfitId === "vermesscarf") {
+  } else if (outfitId === "vouisluittonscarf") {
     content = `
       <!-- Silk scarf wrap -->
       <path d="M 82 190 Q 150 218 218 190 C 228 205, 215 228, 150 228 Q 72 205 82 190 Z" fill="#f59e0b" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -485,7 +485,7 @@ export function getOutfitSVG(outfitId) {
       <line x1="190" y1="277" x2="192" y2="287" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
       <line x1="196" y1="275" x2="199" y2="285" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "vermeshat") {
+  } else if (outfitId === "vouisluittonhat") {
     content = `
       <!-- Fur dome -->
       <path d="M 78 98 A 72 58 0 0 1 222 98 Z" fill="#7c2d12" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -525,7 +525,7 @@ export function getOutfitSVG(outfitId) {
         <line x1="207" y1="103" x2="207" y2="111" stroke="#9ca3af" stroke-width="1.5" />
       </g>
     `;
-  } else if (outfitId === "vermesgoggles") {
+  } else if (outfitId === "vouisluittongoggles") {
     content = `
       <!-- Leather strap with gold stripe -->
       <path d="M 78 122 Q 150 108 222 122" stroke="#92400e" stroke-width="14" fill="none" stroke-linecap="round" />
@@ -533,7 +533,7 @@ export function getOutfitSVG(outfitId) {
       <!-- Gold frame -->
       <rect x="88" y="103" width="124" height="42" rx="21" fill="#fbbf24" stroke="#1b222c" stroke-width="3.5" />
       <!-- Gradient lens -->
-      <rect x="96" y="111" width="108" height="26" rx="13" fill="url(#vermes-lens-gradient)" />
+      <rect x="96" y="111" width="108" height="26" rx="13" fill="url(#vouisluitton-lens-gradient)" />
       <!-- Diamond studs -->
       <circle cx="98" cy="124" r="3.5" fill="#ffffff" stroke="#1b222c" stroke-width="1.5" />
       <circle cx="202" cy="124" r="3.5" fill="#ffffff" stroke="#1b222c" stroke-width="1.5" />
@@ -555,12 +555,12 @@ export function getOutfitSVG(outfitId) {
       <!-- Sloppy stitches -->
       <path d="M 62 120 L 68 126 M 80 136 L 86 142" stroke="#9d174d" stroke-width="2" stroke-linecap="round" stroke-dasharray="2,2" />
     `;
-  } else if (outfitId === "vermesearmuffs") {
+  } else if (outfitId === "vouisluittonearmuffs") {
     content = `
       <!-- Golden arch -->
       <path d="M 85 130 A 68 68 0 0 1 215 130" stroke="#fbbf24" stroke-width="8" fill="none" stroke-linecap="round" />
       <!-- Left fluffy muff -->
-      <g id="vermes-muff-left">
+      <g id="vouisluitton-muff-left">
         <circle cx="62" cy="121" r="7" fill="#fef3c7" />
         <circle cx="59" cy="132" r="7" fill="#fef3c7" />
         <circle cx="63" cy="142" r="7" fill="#fef3c7" />
@@ -573,7 +573,7 @@ export function getOutfitSVG(outfitId) {
         <circle cx="74" cy="131" r="6" fill="#a855f7" stroke="#1b222c" stroke-width="2" />
       </g>
       <!-- Right fluffy muff -->
-      <g id="vermes-muff-right" transform="translate(300,0) scale(-1,1)">
+      <g id="vouisluitton-muff-right" transform="translate(300,0) scale(-1,1)">
         <circle cx="62" cy="121" r="7" fill="#fef3c7" />
         <circle cx="59" cy="132" r="7" fill="#fef3c7" />
         <circle cx="63" cy="142" r="7" fill="#fef3c7" />
@@ -618,7 +618,7 @@ export function getOutfitSVG(outfitId) {
       <circle cx="280" cy="131" r="17" fill="#0d9488" stroke="#1b222c" stroke-width="4" />
       <path d="M 274 125 L 286 137 M 286 125 L 274 137 M 280 123 L 280 139" stroke="#ccfbf1" stroke-width="2" stroke-linecap="round" />
     `;
-  } else if (outfitId === "vermesmittens") {
+  } else if (outfitId === "vouisluittonmittens") {
     content = `
       <!-- Left mitten -->
       <line x1="38" y1="159" x2="46" y2="157" stroke="#1b222c" stroke-width="16" stroke-linecap="round" />
@@ -652,7 +652,7 @@ export function getOutfitSVG(outfitId) {
         <stop offset="0%" stop-color="#f97316" />
         <stop offset="100%" stop-color="#ec4899" />
       </linearGradient>
-      <linearGradient id="vermes-lens-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="vouisluitton-lens-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#a855f7" />
         <stop offset="100%" stop-color="#fbbf24" />
       </linearGradient>
