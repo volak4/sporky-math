@@ -18,7 +18,7 @@ const CATEGORY_MAP = {
   hats: {
     name: 'Hats',
     emoji: '❄️',
-    slots: ['hat', 'earmuffs']
+    slots: ['hat']
   },
   jackets: {
     name: 'Jackets',
