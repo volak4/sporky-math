@@ -3,12 +3,12 @@
 //   negative = drawn BEHIND Sporky (capes, wings), higher = drawn on top.
 // `slot` enforces one-per-type: equipping an item replaces any worn item
 //   sharing the same slot. Items with unique slots stack freely.
-// Brand tiers: Memu (suspiciously cheap) → South Face (solid) → Vermes (luxury).
+// Brand tiers: Temu (suspiciously cheap) → South Face (solid) → Vermes (luxury).
 export const OUTFITS_DATA = {
   // --- Coats ---
-  memucoat: {
-    id: "memucoat",
-    name: "Memu Puffer",
+  temucoat: {
+    id: "temucoat",
+    name: "Temu Puffer",
     emoji: "🧥",
     price: 30,
     description: "Took 47 days to ship. Slightly lumpy, very pink.",
@@ -37,9 +37,9 @@ export const OUTFITS_DATA = {
     slot: "coat",
   },
   // --- Scarves ---
-  memuscarf: {
-    id: "memuscarf",
-    name: "Memu Scarf",
+  temuscarf: {
+    id: "temuscarf",
+    name: "Temu Scarf",
     emoji: "🧣",
     price: 15,
     description: "Only slightly itchy. The hole adds ventilation!",
@@ -68,9 +68,9 @@ export const OUTFITS_DATA = {
     slot: "scarf",
   },
   // --- Hats ---
-  memubeanie: {
-    id: "memubeanie",
-    name: "Memu Beanie",
+  temubeanie: {
+    id: "temubeanie",
+    name: "Temu Beanie",
     emoji: "🧢",
     price: 12,
     description: "The pom-pom is hanging on by a single thread. Literally.",
@@ -109,9 +109,9 @@ export const OUTFITS_DATA = {
   },
 
   // --- Goggles ---
-  memugoggles: {
-    id: "memugoggles",
-    name: "Memu Goggles",
+  temugoggles: {
+    id: "temugoggles",
+    name: "Temu Goggles",
     emoji: "🥽",
     price: 20,
     description: "Pre-cracked for that experienced-climber look. Tape included.",
@@ -140,9 +140,9 @@ export const OUTFITS_DATA = {
     slot: "goggles",
   },
   // --- Earmuffs ---
-  memuearmuffs: {
-    id: "memuearmuffs",
-    name: "Memu Earmuffs",
+  temuearmuffs: {
+    id: "temuearmuffs",
+    name: "Temu Earmuffs",
     emoji: "🎧",
     price: 8,
     description: "Two different colors, because matching costs extra.",
@@ -171,9 +171,9 @@ export const OUTFITS_DATA = {
     slot: "earmuffs",
   },
   // --- Mittens ---
-  memumittens: {
-    id: "memumittens",
-    name: "Memu Mittens",
+  temumittens: {
+    id: "temumittens",
+    name: "Temu Mittens",
     emoji: "🧤",
     price: 10,
     description: "One pink, one green. They ran out of pairs.",
@@ -413,7 +413,7 @@ export function getOutfitSVG(outfitId) {
       <polygon points="150 170, 153 177, 161 177, 155 182, 157 190, 150 185, 143 190, 145 182, 139 177, 147 177" fill="#fbbf24" stroke="#1b222c" stroke-width="2" stroke-linejoin="round" />
     `;
 
-  } else if (outfitId === "memucoat") {
+  } else if (outfitId === "temucoat") {
     content = `
       <!-- Lumpy puffer body -->
       <path d="M 77 165 A 75 75 0 0 0 223 165 Q 150 148 77 165 Z" fill="#ec4899" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -457,7 +457,7 @@ export function getOutfitSVG(outfitId) {
       <!-- Sparkle -->
       <path d="M 200 178 L 200 186 M 196 182 L 204 182" stroke="#fef3c7" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "memuscarf") {
+  } else if (outfitId === "temuscarf") {
     content = `
       <!-- Thin raggedy scarf wrap -->
       <path d="M 82 190 Q 150 218 218 190 C 228 205, 215 228, 150 228 Q 72 205 82 190 Z" fill="#a3e635" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -495,7 +495,7 @@ export function getOutfitSVG(outfitId) {
       <line x1="190" y1="277" x2="192" y2="287" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
       <line x1="196" y1="275" x2="199" y2="285" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "memubeanie") {
+  } else if (outfitId === "temubeanie") {
     content = `
       <!-- Saggy lopsided dome -->
       <path d="M 78 100 C 84 58 130 34 178 46 C 210 54 226 76 222 98 Q 150 82 78 100 Z" fill="#9ca3af" stroke="#1b222c" stroke-width="4.5" stroke-linejoin="round" />
@@ -532,7 +532,7 @@ export function getOutfitSVG(outfitId) {
       <path d="M 94 56 L 94 64 M 90 60 L 98 60" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" />
       <path d="M 210 50 L 210 58 M 206 54 L 214 54" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "memugoggles") {
+  } else if (outfitId === "temugoggles") {
     content = `
       <!-- Flimsy strap -->
       <path d="M 78 122 Q 150 108 222 122" stroke="#6b7280" stroke-width="12" fill="none" stroke-linecap="round" />
@@ -568,7 +568,7 @@ export function getOutfitSVG(outfitId) {
       <!-- Sparkle -->
       <path d="M 218 96 L 218 104 M 214 100 L 222 100" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "memuearmuffs") {
+  } else if (outfitId === "temuearmuffs") {
     content = `
       <!-- Kinked headband -->
       <path d="M 85 130 Q 95 75 148 64 L 154 76 Q 200 84 215 130" stroke="#1b222c" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
@@ -614,7 +614,7 @@ export function getOutfitSVG(outfitId) {
       <!-- Sparkle on arch -->
       <path d="M 150 70 L 150 78 M 146 74 L 154 74" stroke="#fef3c7" stroke-width="2.5" stroke-linecap="round" />
     `;
-  } else if (outfitId === "memumittens") {
+  } else if (outfitId === "temumittens") {
     content = `
       <!-- Left mitten: pink -->
       <line x1="38" y1="159" x2="46" y2="157" stroke="#1b222c" stroke-width="16" stroke-linecap="round" />
