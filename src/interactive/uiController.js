@@ -567,9 +567,9 @@ export function renderShopGrid() {
 
     let priceBadge = '';
     if (isActive) {
-      priceBadge = `<div class="outfit-price" style="color: #0f766e; background: #ccfbf1; border-color: #14b8a6; border-style: solid;">Active</div>`;
+      priceBadge = `<div class="outfit-price" style="color: #0f766e; background: #ccfbf1; border-color: #14b8a6; border-style: solid;">currently wearing</div>`;
     } else if (isPurchased) {
-      priceBadge = `<div class="outfit-price" style="color: #475569; background: #f1f5f9; border-color: #94a3b8; border-style: solid;">Owned</div>`;
+      priceBadge = `<div class="outfit-price" style="color: #475569; background: #f1f5f9; border-color: #94a3b8; border-style: solid;">on the rack</div>`;
     } else {
       priceBadge = `<div class="outfit-price">💰 ${outfit.price} Coins</div>`;
     }
