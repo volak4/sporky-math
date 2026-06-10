@@ -3,7 +3,7 @@
 //   negative = drawn BEHIND Sporky (capes, wings), higher = drawn on top.
 // `slot` enforces one-per-type: equipping an item replaces any worn item
 //   sharing the same slot. Items with unique slots stack freely.
-// Brand tiers: Memu (suspiciously cheap) → North Farce (solid) → Vermes (luxury).
+// Brand tiers: Memu (suspiciously cheap) → South Face (solid) → Vermes (luxury).
 export const OUTFITS_DATA = {
   // --- Coats ---
   memucoat: {
@@ -18,7 +18,7 @@ export const OUTFITS_DATA = {
   },
   jacket: {
     id: "jacket",
-    name: "North Farce Parka",
+    name: "South Face Parka",
     emoji: "🧥",
     price: 100,
     description: "Trail-tested and toasty. Built for real mountain weather.",
@@ -49,7 +49,7 @@ export const OUTFITS_DATA = {
   },
   scarf: {
     id: "scarf",
-    name: "North Farce Scarf",
+    name: "South Face Scarf",
     emoji: "🧣",
     price: 40,
     description: "A cozy red and white knit scarf for mountaineering.",
@@ -80,7 +80,7 @@ export const OUTFITS_DATA = {
   },
   beanie: {
     id: "beanie",
-    name: "North Farce Beanie",
+    name: "South Face Beanie",
     emoji: "❄️",
     price: 50,
     description: "A classic winter hat topped with a fluffy white pom-pom.",
@@ -111,7 +111,7 @@ export const OUTFITS_DATA = {
   },
   goggles: {
     id: "goggles",
-    name: "North Farce Goggles",
+    name: "South Face Goggles",
     emoji: "🥽",
     price: 1,
     description: "High-altitude orange tint goggles for bright snow glare.",
@@ -142,7 +142,7 @@ export const OUTFITS_DATA = {
   },
   earmuffs: {
     id: "earmuffs",
-    name: "North Farce Earmuffs",
+    name: "South Face Earmuffs",
     emoji: "🎧",
     price: 25,
     description: "Keep Sporky's ears warm with these cozy teal earmuffs.",
@@ -171,9 +171,9 @@ export const OUTFITS_DATA = {
     layer: 11,
     slot: "mittens",
   },
-  farcemittens: {
-    id: "farcemittens",
-    name: "North Farce Mittens",
+  facemittens: {
+    id: "facemittens",
+    name: "South Face Mittens",
     emoji: "🧤",
     price: 35,
     description: "Sturdy thermal mittens with a proper grip.",
@@ -785,7 +785,7 @@ export function getOutfitSVG(outfitId) {
       <circle cx="280" cy="131" r="17" fill="#84cc16" stroke="#1b222c" stroke-width="4" />
       <path d="M 272 124 L 278 130 M 282 136 L 288 142" stroke="#3f6212" stroke-width="2" stroke-linecap="round" stroke-dasharray="2,2" />
     `;
-  } else if (outfitId === "farcemittens") {
+  } else if (outfitId === "facemittens") {
     content = `
       <!-- Left mitten -->
       <line x1="38" y1="159" x2="46" y2="157" stroke="#1b222c" stroke-width="16" stroke-linecap="round" />
