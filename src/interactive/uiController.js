@@ -607,28 +607,43 @@ export function renderShopGrid() {
 
   let displayedCount = 0;
 
-  // Sort outfits cheapest first
-  const sortedOutfits = Object.values(OUTFITS_DATA).sort((a, b) => a.price - b.price);
+  const allowedSlots = CATEGORY_MAP[activeCategory].slots;
 
-  sortedOutfits.forEach((outfit) => {
+  // Filter outfits for the current category and tab
+  const categoryOutfits = Object.values(OUTFITS_DATA).filter((outfit) => {
     const isPurchased = purchased.includes(outfit.id);
-    const isActive = activeOutfits.includes(outfit.id);
 
     // Closet tab: only show owned items
     if (activeShopTab === 'closet' && !isPurchased) {
-      return;
+      return false;
     }
 
     // Buy tab: only show winter outfits for Mount Zaina
     if (activeShopTab === 'buy' && outfit.shop !== 'zaina') {
-      return;
+      return false;
     }
 
     // Filter by active category's slots
-    const allowedSlots = CATEGORY_MAP[activeCategory].slots;
     if (!allowedSlots.includes(outfit.slot)) {
-      return;
+      return false;
     }
+
+    return true;
+  });
+
+  // Sort: first by the index of its slot in allowedSlots, then by price
+  categoryOutfits.sort((a, b) => {
+    const slotIdxA = allowedSlots.indexOf(a.slot);
+    const slotIdxB = allowedSlots.indexOf(b.slot);
+    if (slotIdxA !== slotIdxB) {
+      return slotIdxA - slotIdxB;
+    }
+    return a.price - b.price;
+  });
+
+  categoryOutfits.forEach((outfit) => {
+    const isPurchased = purchased.includes(outfit.id);
+    const isActive = activeOutfits.includes(outfit.id);
 
     displayedCount++;
 
