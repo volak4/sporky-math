@@ -120,13 +120,11 @@ function formatEquationHTML(rise, run, b) {
   } else if (simplifiedRun === 1) {
     mStr = `<span class="run-color">${simplifiedRise}</span>`;
   } else {
-    let mText = "";
     if (simplifiedRise < 0) {
-      mText = `-${Math.abs(simplifiedRise)}/${simplifiedRun}`;
+      mStr = `<span style="color: black;">-</span><span class="rise-color">${Math.abs(simplifiedRise)}</span><span style="color: black;">/</span><span class="run-color">${simplifiedRun}</span>`;
     } else {
-      mText = `${simplifiedRise}/${simplifiedRun}`;
+      mStr = `<span class="rise-color">${simplifiedRise}</span><span style="color: black;">/</span><span class="run-color">${simplifiedRun}</span>`;
     }
-    mStr = `<span class="run-color">${mText}</span>`;
   }
 
   let bStr = "";
@@ -452,7 +450,7 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
 
     const eqHTML = formatEquationHTML(riseVal, runVal, bVal);
     const hintHTML = formatSlopeHintHTML(riseVal, runVal);
-    level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">First, drop Sporky on the y-intercept.</div>`;
+    level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">First, drop Sporky on the <span class="rise-color">Y-intercept</span>.</div>`;
   } else if (currentLevelIndex === 4) {
     // Randomize level 5 equation
     const q1Options = [
@@ -1421,7 +1419,7 @@ export function placePegLvl4() {
       
       const eqHTML = formatEquationHTML(level4State.rise, level4State.run, level4State.b);
       const hintHTML = formatSlopeHintHTML(level4State.rise, level4State.run);
-      level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">Next, find the destination point and click Place Peg.</div>`;
+      level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">Second, use the slope in the equation to move Sporky.</div>`;
       showLevelUI(level.id, level.title, level.description, level.instructionText);
 
       const btnPlace = document.getElementById('btn-place-peg-lvl4');
