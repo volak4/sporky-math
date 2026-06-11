@@ -434,6 +434,7 @@
           <!-- Level Navigation (Back/Next footer) -->
           <footer id="level-nav">
             <button id="btn-prev-level" class="btn btn-nav" disabled>&larr; Back</button>
+            <button id="btn-open-shop-mobile" class="btn btn-nav">Go Shopping 🛍️</button>
             <button id="btn-next-level" class="btn btn-nav">Next &rarr;</button>
           </footer>
 
@@ -521,17 +522,27 @@
     <div id="outfit-shop-modal" class="modal-overlay hidden">
       <div class="modal-card shop-modal-card">
         <button id="shop-close-btn" class="modal-close-x">&times;</button>
-        <div class="modal-emoji">🛍️</div>
-        <h2 class="modal-title">Mt. Zaina's Winter Shop</h2>
-        <div class="shop-coin-balance">Balance: 💰 <span id="shop-coins-val">0</span></div>
-        
-        <div class="shop-tabs">
-          <button id="tab-shop-buy" class="shop-tab active">Mt. Zaina Shop 🛍️</button>
-          <button id="tab-shop-closet" class="shop-tab">My Closet 🚪</button>
-        </div>
-        
-        <div id="shop-outfits-grid" class="shop-grid">
-          <!-- Rendered dynamically by JS -->
+        <div class="shop-modal-content-layout">
+          <!-- Left/Top: Sporky live preview panel -->
+          <div class="shop-modal-preview-panel">
+            <div class="shop-preview-header">Sporky's Look ❄️</div>
+            <div id="shop-character-canvas-container" class="shop-sporky-preview-canvas"></div>
+          </div>
+          <!-- Right/Bottom: Main shop controls -->
+          <div class="shop-modal-main-panel">
+            <div class="modal-emoji">🛍️</div>
+            <h2 class="modal-title">Mt. Zaina's Winter Shop</h2>
+            <div class="shop-coin-balance">Balance: 💰 <span id="shop-coins-val">0</span></div>
+            
+            <div class="shop-tabs">
+              <button id="tab-shop-buy" class="shop-tab active">Mt. Zaina Shop 🛍️</button>
+              <button id="tab-shop-closet" class="shop-tab">My Closet 🚪</button>
+            </div>
+            
+            <div id="shop-outfits-grid" class="shop-grid">
+              <!-- Rendered dynamically by JS -->
+            </div>
+          </div>
         </div>
       </div>
     </div>

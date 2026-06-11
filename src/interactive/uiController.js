@@ -5,7 +5,7 @@ import { getLocalSolvedCount, getCoins, purchaseOutfit, equipOutfit, unequipOutf
 import { OUTFITS_DATA } from '../engine/outfits.js';
 import { trackLevelChange } from '../lib/sessionTracker.js';
 import { playPurchaseSound } from '../engine/audio.js';
-import { updateSidebarCharacterOutfit } from '../engine/sidebarCharacter.js';
+import { updateSidebarCharacterOutfit, initSidebarCharacter, stopSidebarCharacter } from '../engine/sidebarCharacter.js';
 import { updateClimberOutfit } from '../engine/climber.js';
 import { updateWelcomeSporkyOutfit } from '../engine/welcomeSporky.js';
 
@@ -104,6 +104,7 @@ export function initUI() {
     gameCoinsVal: document.getElementById('game-coins-val'),
     shopCoinsVal: document.getElementById('shop-coins-val'),
     btnOpenShop: document.getElementById('btn-open-shop'),
+    btnOpenShopMobile: document.getElementById('btn-open-shop-mobile'),
     outfitShopModal: document.getElementById('outfit-shop-modal'),
     shopCloseBtn: document.getElementById('shop-close-btn'),
     shopOutfitsGrid: document.getElementById('shop-outfits-grid'),
@@ -204,30 +205,47 @@ function bindEvents() {
   }
 
   // Shop events
+  const openShopFn = () => {
+    activeShopTab = 'buy';
+    activeCategory = null;
+    const tabB = document.getElementById('tab-shop-buy');
+    const tabC = document.getElementById('tab-shop-closet');
+    if (tabB && tabC) {
+      tabB.classList.add('active');
+      tabC.classList.remove('active');
+    }
+    elements.outfitShopModal.classList.remove('hidden');
+
+    const shopPreviewContainer = document.getElementById('shop-character-canvas-container');
+    if (shopPreviewContainer) {
+      initSidebarCharacter(shopPreviewContainer);
+    }
+
+    renderShopGrid();
+    updateCoinDisplays();
+  };
+
+  const closeShopFn = () => {
+    elements.outfitShopModal.classList.add('hidden');
+    const shopPreviewContainer = document.getElementById('shop-character-canvas-container');
+    if (shopPreviewContainer) {
+      stopSidebarCharacter(shopPreviewContainer);
+    }
+  };
+
   if (elements.btnOpenShop) {
-    elements.btnOpenShop.addEventListener('click', () => {
-      activeShopTab = 'buy';
-      activeCategory = null;
-      const tabB = document.getElementById('tab-shop-buy');
-      const tabC = document.getElementById('tab-shop-closet');
-      if (tabB && tabC) {
-        tabB.classList.add('active');
-        tabC.classList.remove('active');
-      }
-      elements.outfitShopModal.classList.remove('hidden');
-      renderShopGrid();
-      updateCoinDisplays();
-    });
+    elements.btnOpenShop.addEventListener('click', openShopFn);
+  }
+  if (elements.btnOpenShopMobile) {
+    elements.btnOpenShopMobile.addEventListener('click', openShopFn);
   }
   if (elements.shopCloseBtn) {
-    elements.shopCloseBtn.addEventListener('click', () => {
-      elements.outfitShopModal.classList.add('hidden');
-    });
+    elements.shopCloseBtn.addEventListener('click', closeShopFn);
   }
   if (elements.outfitShopModal) {
     elements.outfitShopModal.addEventListener('click', (e) => {
       if (e.target === elements.outfitShopModal) {
-        elements.outfitShopModal.classList.add('hidden');
+        closeShopFn();
       }
     });
   }

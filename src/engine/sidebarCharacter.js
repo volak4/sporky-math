@@ -1,7 +1,7 @@
 import { getPlayerColor, getActiveOutfits } from '../lib/progressManager.js';
 import { OUTFITS_DATA, getOutfitSVG } from './outfits.js';
 
-let containerElement = null;
+let containerElements = [];
 let activeOutfitIds = [];
 let activeColor = '#06b6d4';
 
@@ -29,7 +29,7 @@ function getDarkerColor(hex) {
  * Renders the static 2D SVG character inside the container
  */
 function render2DSporky() {
-  if (!containerElement) return;
+  if (containerElements.length === 0) return;
 
   const color = activeColor;
   const darkColor = getDarkerColor(color);
@@ -129,7 +129,9 @@ function render2DSporky() {
     </svg>
   `;
 
-  containerElement.innerHTML = svgContent;
+  containerElements.forEach((container) => {
+    container.innerHTML = svgContent;
+  });
 }
 
 /**
@@ -138,7 +140,9 @@ function render2DSporky() {
  */
 export function initSidebarCharacter(container) {
   if (!container) return;
-  containerElement = container;
+  if (!containerElements.includes(container)) {
+    containerElements.push(container);
+  }
   activeColor = getPlayerColor() || '#06b6d4';
   activeOutfitIds = getActiveOutfits();
 
@@ -166,8 +170,12 @@ export function updateSidebarCharacterOutfit(outfitIds) {
 /**
  * Stops the sidebar character
  */
-export function stopSidebarCharacter() {
-  containerElement = null;
+export function stopSidebarCharacter(container) {
+  if (!container) {
+    containerElements = [];
+  } else {
+    containerElements = containerElements.filter((c) => c !== container);
+  }
 }
 
 /**
