@@ -226,9 +226,87 @@ export function setClimberColor(hexColor) {
   }
 }
 
+let parachuteMesh = null;
+let isHoveringWithParachute = false;
+
+function buildParachute() {
+  const group = new THREE.Group();
+  
+  // 1. Canopy (hemisphere)
+  const canopyGeo = new THREE.SphereGeometry(0.55, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+  const canopyMat = new THREE.MeshToonMaterial({
+    color: '#f97316', // Sunset Orange
+    side: THREE.DoubleSide,
+    gradientMap: getToonGradientTexture()
+  });
+  const canopy = new THREE.Mesh(canopyGeo, canopyMat);
+  canopy.position.set(0, 0.9, 0); // Positioned above the climber
+  group.add(canopy);
+  
+  // 2. White stripe/band on the canopy for detail
+  const stripeGeo = new THREE.SphereGeometry(0.56, 16, 6, 0, Math.PI * 2, 0.3, 0.2);
+  const stripeMat = new THREE.MeshToonMaterial({
+    color: '#ffffff',
+    side: THREE.DoubleSide,
+    gradientMap: getToonGradientTexture()
+  });
+  const stripe = new THREE.Mesh(stripeGeo, stripeMat);
+  stripe.position.set(0, 0.9, 0);
+  group.add(stripe);
+
+  // 3. Ropes
+  const ropeMat = new THREE.LineBasicMaterial({ color: '#475569', linewidth: 2 });
+  
+  const rimPoints = [
+    new THREE.Vector3(0.4, 0.9, 0),
+    new THREE.Vector3(-0.4, 0.9, 0),
+    new THREE.Vector3(0, 0.9, 0.4),
+    new THREE.Vector3(0, 0.9, -0.4)
+  ];
+  
+  const anchorPoint = new THREE.Vector3(0, 0.2, 0);
+  
+  rimPoints.forEach(pt => {
+    const points = [pt, anchorPoint];
+    const ropeGeo = new THREE.BufferGeometry().setFromPoints(points);
+    const rope = new THREE.Line(ropeGeo, ropeMat);
+    group.add(rope);
+  });
+  
+  return group;
+}
+
+export function setClimberHovering(hovering) {
+  isHoveringWithParachute = hovering;
+  if (!climberGroup) return;
+  
+  if (hovering) {
+    if (!parachuteMesh) {
+      parachuteMesh = buildParachute();
+    }
+    if (parachuteMesh.parent !== climberGroup) {
+      climberGroup.add(parachuteMesh);
+    }
+    // Make Sporky slightly bigger (1.35x)
+    climberGroup.scale.set(1.35, 1.35, 1.35);
+    climberGroup.position.z = 0.8;
+  } else {
+    if (parachuteMesh && parachuteMesh.parent === climberGroup) {
+      climberGroup.remove(parachuteMesh);
+    }
+    climberGroup.scale.set(1.0, 1.0, 1.0);
+    climberGroup.position.z = 0;
+    
+    // Reset body rotation that might be modified by the sway
+    if (bodyMesh) {
+      bodyMesh.rotation.set(0, 0, 0);
+    }
+  }
+}
+
 export function setClimberPosition(x, y) {
   const offset = getCoordinateOffset(x, y);
-  position.set(x + offset.x, y + offset.y, 0);
+  position.set(x + offset.x, y + offset.y, isHoveringWithParachute ? 0.8 : 0);
   targetPosition.copy(position);
   climberGroup.position.copy(position);
   isAnimating = false;
@@ -479,6 +557,17 @@ export function updateClimber(deltaTime) {
     if (Math.abs(springVal) < 0.005) {
       springAmplitude = 0;
       resetClimberRotationAndScale();
+    }
+  }
+
+  // Apply parachute sway and force Z position if hovering
+  if (isHoveringWithParachute) {
+    climberGroup.position.z = 0.8;
+    const swayAngle = Math.sin(totalElapsedTime * 2.0) * 0.08;
+    bodyMesh.rotation.z = swayAngle;
+    if (parachuteMesh) {
+      parachuteMesh.rotation.z = -swayAngle * 0.5;
+      parachuteMesh.position.x = Math.sin(totalElapsedTime * 2.0) * 0.03;
     }
   }
 

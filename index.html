@@ -294,6 +294,12 @@
               <button id="btn-submit-slope-card" class="btn btn-primary btn-pulse hidden" style="margin-top: 0; flex-grow: 1; height: 32px; font-size: 0.85rem; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700;">
                 Submit Slope
               </button>
+              <button id="btn-reset-lvl4" class="btn btn-secondary hidden" style="margin-top: 0; flex-grow: 1; height: 32px; font-size: 0.85rem; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700; white-space: nowrap;">
+                Reset Route
+              </button>
+              <button id="btn-place-peg-lvl4" class="btn btn-primary btn-pulse hidden" style="margin-top: 0; flex-grow: 2; height: 32px; font-size: 0.85rem; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700; white-space: nowrap;">
+                Place Peg
+              </button>
             </div>
 
             <!-- "Try another problem" button (Level 1) moved here -->
@@ -351,29 +357,7 @@
             </div>
 
             <!-- Controls for Level 4 (Plotting the Equation) -->
-            <div id="controls-level-4" class="control-group hidden">
-              <p class="control-instruction">1. Drag Sporky to the y-intercept and click Place Peg.</p>
-              <p class="control-instruction">2. Follow the slope to the destination and click Place Peg again!</p>
-              
-              <!-- Target Equation Display -->
-              <div class="target-equation-card" style="text-align: center; background: #f8fafc; border: 3px solid var(--color-border); border-radius: 12px; padding: 10px; font-weight: 700; font-size: 1.15rem; margin-bottom: 4px;">
-                Equation to Plot:<br/>
-                <span style="font-size: 1.4rem; display: inline-block; white-space: nowrap; text-wrap: nowrap;">y = <span id="target-eq-m-display" class="run-color"></span>x <span id="target-eq-b-display" class="rise-color"></span></span>
-                <div id="slope-hint-lvl4" style="margin-top: 4px; font-size: 0.9rem; font-weight: 600; color: #64748b;"></div>
-              </div>
-
-              <!-- Coordinates Badge -->
-              <div class="coordinates-badge" style="margin-top: 4px; margin-bottom: 4px;">
-                <span class="coord-label">X =</span> <span id="badge-x-val-lvl4" class="coord-num">0</span>
-                <span class="coord-label">Y =</span> <span id="badge-y-val-lvl4" class="coord-num">0</span>
-              </div>
-
-              <!-- Action buttons -->
-              <div style="display: flex; gap: 10px; width: 100%; margin-top: 5px;">
-                <button id="btn-reset-lvl4" class="btn btn-secondary" style="flex-grow: 1; justify-content: center;">Reset Route</button>
-                <button id="btn-place-peg-lvl4" class="btn btn-primary btn-pulse" style="flex-grow: 2; justify-content: center;">Place Peg</button>
-              </div>
-            </div>
+            <div id="controls-level-4" class="control-group hidden" style="display: none;"></div>
 
             <!-- Controls for Level 5 (Slope-Intercept Setter) -->
             <div id="controls-level-5" class="control-group hidden">

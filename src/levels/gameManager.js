@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { levels, generateRealWorldProblem } from './levelData.js';
 import { createClimbingWall, setGridVisibility, createHold, clearHolds, getHolds, getToonGradientTexture, getCoordinateOffset, isInsideMountain, setDestinationLabel, createSlopeValueLabel, createSignLabel } from '../engine/wall.js';
-import { createClimber, setClimberPosition, animateToPosition, updateClimber, getClimberGroup, getClimberPosition, setClimberExpression } from '../engine/climber.js';
+import { createClimber, setClimberPosition, animateToPosition, updateClimber, getClimberGroup, getClimberPosition, setClimberExpression, setClimberHovering } from '../engine/climber.js';
 import { playSuccessSound, playFailureSound } from '../engine/audio.js';
 import { setDragEnabled } from '../interactive/dragManager.js';
 import { incrementSolvedCount, getLocalSolvedCount, setLocalSolvedCount, saveProgress, registerIncorrectAnswer } from '../lib/progressManager.js';
@@ -160,6 +160,8 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
   currentLevelIndex = levelIndex;
   levelCompleted = false;
   setNextButtonUnlocked(false);
+
+  setClimberHovering(levelIndex === 3);
 
   const level = levels[currentLevelIndex];
 
@@ -447,7 +449,7 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
 
     const eqHTML = formatEquationHTML(riseVal, runVal, bVal);
     const hintHTML = formatSlopeHintHTML(riseVal, runVal);
-    level.description = `We've given you the equation:<br/><strong style="font-size: 1.35rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<strong>Step 1:</strong> Find the y-intercept. Drag Sporky to the y-intercept, then click <strong>Place Peg</strong>.`;
+    level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">First, drop Sporky on the y-intercept.</div>`;
   } else if (currentLevelIndex === 4) {
     // Randomize level 5 equation
     const q1Options = [
@@ -1398,6 +1400,7 @@ export function placePegLvl4() {
       
       level4State.interceptLabel = createSignLabel(sceneObj, 0, level4State.b, `y-int: (0, ${level4State.b})`, '#f59e0b');
 
+      setClimberHovering(false);
 
       level4State.phase = 'slope';
       level.startPos = { x: 0, y: level4State.b };
@@ -1410,7 +1413,7 @@ export function placePegLvl4() {
       
       const eqHTML = formatEquationHTML(level4State.rise, level4State.run, level4State.b);
       const hintHTML = formatSlopeHintHTML(level4State.rise, level4State.run);
-      level.description = `Placed y-intercept peg at <strong>(0, ${level4State.b})</strong>!<br/><br/>Follow the slope to plot:<br/><strong style="font-size: 1.35rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<strong>Step 2:</strong> Find the destination point, then click <strong>Place Peg</strong>.`;
+      level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">Next, find the destination point and click Place Peg.</div>`;
       showLevelUI(level.id, level.title, level.description, level.instructionText);
       
       showToast(`Placed y-intercept peg! Now follow the slope.`);

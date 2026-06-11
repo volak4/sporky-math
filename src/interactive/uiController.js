@@ -342,6 +342,8 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
   if (elements.panelLvl5) elements.panelLvl5.classList.add('hidden');
   elements.currentCoordTag.classList.add('hidden');
   if (elements.btnSubmitSlopeCard) elements.btnSubmitSlopeCard.classList.add('hidden');
+  if (elements.btnResetLvl4) elements.btnResetLvl4.classList.add('hidden');
+  if (elements.btnPlacePegLvl4) elements.btnPlacePegLvl4.classList.add('hidden');
 
   // Toggle Level 1 "Try another problem" button inside challenge card
   if (levelId === 1) {
@@ -350,9 +352,9 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     if (elements.btnTryAnother) elements.btnTryAnother.classList.add('hidden');
   }
 
-  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, and Level 3)
+  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, Level 3, and Level 4)
   if (elements.controlPanel) {
-    if (levelId === 1 || levelId === 2 || levelId === 3) {
+    if (levelId === 1 || levelId === 2 || levelId === 3 || levelId === 4) {
       elements.controlPanel.classList.add('hidden');
     } else {
       elements.controlPanel.classList.remove('hidden');
@@ -373,8 +375,9 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     if (inputRise) inputRise.value = '';
     if (inputRun) inputRun.value = '';
   } else if (levelId === 4) {
-    elements.panelLvl4.classList.remove('hidden');
     elements.currentCoordTag.classList.remove('hidden');
+    if (elements.btnResetLvl4) elements.btnResetLvl4.classList.remove('hidden');
+    if (elements.btnPlacePegLvl4) elements.btnPlacePegLvl4.classList.remove('hidden');
   } else if (levelId === 5 || levelId === 6) {
     if (elements.panelLvl5) elements.panelLvl5.classList.remove('hidden');
     // Reset sliders visual
