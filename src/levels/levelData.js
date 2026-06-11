@@ -108,15 +108,16 @@ export const levels = [
     title: "Plotting the Equation",
     description: "We've given you the equation y = mx + b. Find the y-intercept first, place a peg, and then follow the slope to place the second peg!",
     instructionText: "Drag Sporky to the y-intercept, click Place Peg. Then drag along the slope to the next point and click Place Peg again.",
-    startPos: { x: 0, y: 0 },
+    startPos: { x: 4, y: 4 },
     targetPos: { x: 0, y: 0 },
     showGridLines: true,
     setupHolds: function(scene, createHold) {
+      const start = this.startPos || { x: 4, y: 4 };
       for (let x = -4; x <= 4; x++) {
         for (let y = -4; y <= 4; y++) {
           if (!isInsideMountain(x, y)) continue;
           
-          const isStart = x === 0 && y === 0;
+          const isStart = x === start.x && y === start.y;
           const isOnAxis = x === 0 || y === 0;
           const defaultColor = isOnAxis ? '#64748b' : '#cbd5e1';
           const color = isStart ? '#10b981' : defaultColor;

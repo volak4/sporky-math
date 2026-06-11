@@ -444,7 +444,7 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     level4State.interceptLabel = null;
     level4State.destLabel = null;
 
-    level.startPos = { x: 0, y: 0 };
+    level.startPos = { x: 4, y: 4 };
     level.targetPos = { x: 0, y: bVal };
 
     const eqHTML = formatEquationHTML(riseVal, runVal, bVal);
@@ -717,7 +717,9 @@ export function handleClimberSnap(hold) {
   } else if (level.id === 2 || level.id === 3 || level.id === 4) {
     updateCoordinatesDisplay(hold.userData.x, hold.userData.y);
     const climberPos = getClimberPosition();
-    tryExtendPath(hold.userData.x, hold.userData.y, climberPos.x, climberPos.y);
+    if (level.id !== 4 || level4State.phase === 'slope') {
+      tryExtendPath(hold.userData.x, hold.userData.y, climberPos.x, climberPos.y);
+    }
     lastSnappedPos = { x: hold.userData.x, y: hold.userData.y };
     
     // Auto-validate for Level 2 once Sporky snaps to correct coordinate
@@ -960,6 +962,9 @@ export function handleClimberDrag(x, y) {
 
   const level = levels[currentLevelIndex];
   if (level.id === 2 || level.id === 3 || level.id === 4) {
+    if (level.id === 4 && level4State.phase === 'intercept') {
+      return; // Skip path calculation while hovering on parachute
+    }
     const rx = Math.round(x);
     const ry = Math.round(y);
     const dist = Math.sqrt((x - rx) ** 2 + (y - ry) ** 2);

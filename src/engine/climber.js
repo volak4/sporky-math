@@ -276,6 +276,10 @@ function buildParachute() {
   return group;
 }
 
+export function getClimberHovering() {
+  return isHoveringWithParachute;
+}
+
 export function setClimberHovering(hovering) {
   isHoveringWithParachute = hovering;
   if (!climberGroup) return;

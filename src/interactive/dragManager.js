@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { getHolds, getCoordinateOffset } from '../engine/wall.js';
-import { setDragStretch, triggerSquish, setClimberPosition, animateToPosition, setDraggingState } from '../engine/climber.js';
+import { setDragStretch, triggerSquish, setClimberPosition, animateToPosition, setDraggingState, getClimberHovering } from '../engine/climber.js';
 import { playHorizontalTick, playVerticalTick } from '../engine/audio.js';
 
 let isDragging = false;
@@ -73,7 +73,10 @@ function onPointerDown(e) {
   
   if (raycaster.ray.intersectPlane(dragPlane, intersection)) {
     const climberPos = climberGroupObj.position;
-    const clickDist = intersection.distanceTo(climberPos);
+    // Calculate 2D distance on the X-Y plane (ignoring Z offset)
+    const dxClick = intersection.x - climberPos.x;
+    const dyClick = intersection.y - climberPos.y;
+    const clickDist = Math.sqrt(dxClick * dxClick + dyClick * dyClick);
 
     // If click is close to the climber (radius 0.7 units)
     if (clickDist < 0.75) {
@@ -96,7 +99,10 @@ function onPointerDown(e) {
       holds.forEach(hold => {
         const offset = getCoordinateOffset(hold.userData.x, hold.userData.y);
         const holdPos = new THREE.Vector3(hold.userData.x + offset.x, hold.userData.y + offset.y, 0);
-        const d = climberPos.distanceTo(holdPos);
+        // Calculate 2D distance on the X-Y plane
+        const dxHold = climberPos.x - holdPos.x;
+        const dyHold = climberPos.y - holdPos.y;
+        const d = Math.sqrt(dxHold * dxHold + dyHold * dyHold);
         if (d < minDist) {
           minDist = d;
           nearestHold = hold;
@@ -123,6 +129,64 @@ function onPointerMove(e) {
     // Limit bounds so slime can't be dragged off wall screen
     intersection.x = Math.max(-5.8, Math.min(5.8, intersection.x));
     intersection.y = Math.max(-5.8, Math.min(5.8, intersection.y));
+    
+    if (getClimberHovering && getClimberHovering()) {
+      // Drag climber freely without any grid or axial constraint
+      climberGroupObj.position.x = intersection.x;
+      climberGroupObj.position.y = intersection.y;
+      climberGroupObj.position.z = 0.8; // Force hovering z
+
+      // Calculate stretch displacement from the dragging motion
+      const dxStretch = intersection.x - previousPos.x;
+      const dyStretch = intersection.y - previousPos.y;
+      setDragStretch(dxStretch, dyStretch);
+      previousPos.copy(intersection);
+
+      // Play tick sounds when crossing coordinate intervals
+      const roundedX = Math.round(intersection.x);
+      const roundedY = Math.round(intersection.y);
+      if (roundedX !== lastTickX || roundedY !== lastTickY) {
+        if (roundedX !== lastTickX) {
+          playHorizontalTick();
+          lastTickX = roundedX;
+        }
+        if (roundedY !== lastTickY) {
+          playVerticalTick();
+          lastTickY = roundedY;
+        }
+      }
+
+      // Scaling/pulsing nearby holds
+      const holds = getHolds();
+      let hoveredHold = null;
+      let minDist = 0.65;
+      
+      holds.forEach(hold => {
+        const offset = getCoordinateOffset(hold.userData.x, hold.userData.y);
+        const holdPos = new THREE.Vector3(hold.userData.x + offset.x, hold.userData.y + offset.y, 0);
+        
+        // Check 2D distance from cursor intersection for hover pulsing
+        const dxCursor = intersection.x - holdPos.x;
+        const dyCursor = intersection.y - holdPos.y;
+        const dCursor = Math.sqrt(dxCursor * dxCursor + dyCursor * dyCursor);
+        if (dCursor < minDist) {
+          minDist = dCursor;
+          hoveredHold = hold;
+        }
+        
+        // Reset scale of all holds
+        hold.userData.mesh.scale.set(1, 1, 1);
+      });
+
+      if (hoveredHold) {
+        hoveredHold.userData.mesh.scale.set(1.25, 1.25, 1.25);
+      }
+
+      if (onDragCallback) {
+        onDragCallback(intersection.x, intersection.y);
+      }
+      return;
+    }
     
     // Constrain dragging to only horizontal or vertical movement from current anchor position
     let dx = intersection.x - dragStartPos.x;
@@ -191,8 +255,10 @@ function onPointerMove(e) {
       const offset = getCoordinateOffset(hold.userData.x, hold.userData.y);
       const holdPos = new THREE.Vector3(hold.userData.x + offset.x, hold.userData.y + offset.y, 0);
       
-      // Check distance from climber position to update anchor
-      const dClimber = climberGroupObj.position.distanceTo(holdPos);
+      // Check 2D distance from climber position to update anchor
+      const dxClimber = climberGroupObj.position.x - holdPos.x;
+      const dyClimber = climberGroupObj.position.y - holdPos.y;
+      const dClimber = Math.sqrt(dxClimber * dxClimber + dyClimber * dyClimber);
       if (dClimber < 0.35) {
         if (dragStartPos.distanceTo(holdPos) > 0.1) {
           dragStartPos.copy(holdPos);
@@ -237,7 +303,10 @@ function onPointerUp(e) {
   holds.forEach(hold => {
     const offset = getCoordinateOffset(hold.userData.x, hold.userData.y);
     const holdPos = new THREE.Vector3(hold.userData.x + offset.x, hold.userData.y + offset.y, 0);
-    const d = climberPos.distanceTo(holdPos);
+    // Calculate 2D distance on the X-Y plane (ignoring Z offset)
+    const dx = climberPos.x - holdPos.x;
+    const dy = climberPos.y - holdPos.y;
+    const d = Math.sqrt(dx * dx + dy * dy);
     if (d < minDist) {
       minDist = d;
       nearestHold = hold;
