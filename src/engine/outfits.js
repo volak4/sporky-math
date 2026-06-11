@@ -72,7 +72,7 @@ export const OUTFITS_DATA = {
     id: "beanie",
     name: "South Face Beanie",
     emoji: "🎁",
-    price: 50,
+    price: 2,
     description: "A classic winter hat topped with a fluffy white pom-pom.",
     shop: "zaina",
     layer: 8,
