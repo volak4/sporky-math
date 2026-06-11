@@ -731,6 +731,23 @@ export function handleClimberSnap(hold) {
     if (level.id === 2 && level.validate(hold.userData)) {
       submitSlopePosition();
     }
+
+    // Auto-validate for Level 4 once Sporky snaps to correct coordinate in slope phase
+    if (level.id === 4 && level4State.phase === 'slope') {
+      const cx = hold.userData.x;
+      const cy = hold.userData.y;
+      const gcd = (x, y) => y === 0 ? x : gcd(y, x % y);
+      const d = Math.abs(gcd(level4State.rise, level4State.run));
+      const reducedRise = level4State.rise / d;
+      const reducedRun = level4State.run / d;
+      
+      const onLine = cx !== 0 && ((cy - level4State.b) * reducedRun === reducedRise * cx);
+      const correctDirection = cx > 0;
+      
+      if (onLine && correctDirection) {
+        placePegLvl4();
+      }
+    }
   }
 }
 
