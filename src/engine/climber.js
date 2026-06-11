@@ -573,6 +573,22 @@ export function updateClimber(deltaTime) {
       parachuteMesh.rotation.z = -swayAngle * 0.5;
       parachuteMesh.position.x = Math.sin(totalElapsedTime * 2.0) * 0.03;
     }
+
+    // Override limb positions when hovering to dangle/sway in sync with the body
+    const cosVal = Math.cos(swayAngle);
+    const sinVal = Math.sin(swayAngle);
+    const rotateVec = (vec) => {
+      return new THREE.Vector3(
+        (vec.x * cosVal - vec.y * sinVal),
+        (vec.x * sinVal + vec.y * cosVal),
+        vec.z
+      );
+    };
+
+    worldLeftHand.copy(climberGroup.position).add(rotateVec(baseLeftHand));
+    worldRightHand.copy(climberGroup.position).add(rotateVec(baseRightHand));
+    worldLeftFoot.copy(climberGroup.position).add(rotateVec(baseLeftFoot));
+    worldRightFoot.copy(climberGroup.position).add(rotateVec(baseRightFoot));
   }
 
   // 4. Update Limbs and Paw meshes positions & orientations
