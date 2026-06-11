@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 let scene, camera, renderer;
 const VIEW_SIZE = 5.5; // units visible vertically from center to top (smaller = more zoomed in)
+let currentViewSize = VIEW_SIZE;
 
 export function initScene(container) {
   scene = new THREE.Scene();
@@ -12,10 +13,10 @@ export function initScene(container) {
   const h = container.clientHeight || 1;
   const aspect = w / h;
   camera = new THREE.OrthographicCamera(
-    -aspect * VIEW_SIZE,
-    aspect * VIEW_SIZE,
-    VIEW_SIZE,
-    -VIEW_SIZE,
+    -aspect * currentViewSize,
+    aspect * currentViewSize,
+    currentViewSize,
+    -currentViewSize,
     0.1,
     100
   );
@@ -79,16 +80,23 @@ function handleResize() {
 
   const aspect = width / height;
 
-  camera.left = -aspect * VIEW_SIZE;
-  camera.right = aspect * VIEW_SIZE;
-  camera.top = VIEW_SIZE;
-  camera.bottom = -VIEW_SIZE;
+  camera.left = -aspect * currentViewSize;
+  camera.right = aspect * currentViewSize;
+  camera.top = currentViewSize;
+  camera.bottom = -currentViewSize;
   camera.updateProjectionMatrix();
 
   renderer.setSize(width, height);
+}
+
+// Dynamically adjust camera zoom (e.g. zoom out for Level 6 graph view)
+export function setViewSize(size) {
+  currentViewSize = size || VIEW_SIZE;
+  handleResize();
 }
 
 export function getScene() { return scene; }
 export function getCamera() { return camera; }
 export function getRenderer() { return renderer; }
 export function getViewSize() { return VIEW_SIZE; }
+

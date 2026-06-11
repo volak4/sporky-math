@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setViewSize } from '../engine/scene.js';
 import { levels } from './levelData.js';
 import { createClimbingWall, setGridVisibility, setMountainVisibility, createHold, clearHolds, getHolds, getToonGradientTexture, getCoordinateOffset, isInsideMountain, setDestinationLabel, createSlopeValueLabel, createSignLabel } from '../engine/wall.js';
 import { createClimber, setClimberPosition, animateToPosition, updateClimber, getClimberGroup, getClimberPosition, setClimberExpression, setClimberHovering } from '../engine/climber.js';
@@ -547,15 +548,17 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
   // 2. Setup the wall grid lines and axes visibility
   setGridVisibility(level.showGridLines);
 
-  // 2b. Toggle mountain and climber visibility for Level 6
+  // 2b. Toggle mountain, climber, and camera zoom for Level 6
   if (level.id === 6) {
     setMountainVisibility(false);
     const climberGroup = getClimberGroup();
     if (climberGroup) climberGroup.visible = false;
+    setViewSize(6.5); // Zoom out so full grid fits on mobile
   } else {
     setMountainVisibility(true);
     const climberGroup = getClimberGroup();
     if (climberGroup) climberGroup.visible = true;
+    setViewSize(5.5); // Restore default zoom
   }
 
   // 3. Create this level's holds
