@@ -38,6 +38,7 @@ export async function initNavigation() {
   const btnEnterGame = document.getElementById('btn-enter-game');
   const btnBackToWelcome = document.getElementById('btn-back-to-welcome');
   const btnBackToMap = document.getElementById('btn-back-to-map');
+  const btnBackToMapMobile = document.getElementById('btn-back-to-map-mobile');
   const btnOpenCustomizer = document.getElementById('btn-open-customizer');
   const btnCloseCustomizer = document.getElementById('btn-close-customizer');
   
@@ -173,20 +174,22 @@ export async function initNavigation() {
   }
 
   // 4. Navigation: Game -> Map (Exit Game)
+  const exitGameFn = () => {
+    gameScreen.classList.add('hidden');
+    mapScreen.classList.remove('hidden');
+    // Update URL back to root when leaving the slopes exercise
+    history.replaceState({ screen: 'map' }, '', '/');
+    trackScreenChange('map');
+    
+    // Stop sidebar character preview to conserve resources
+    stopSidebarCharacter();
+  };
+
   if (btnBackToMap) {
-    btnBackToMap.addEventListener('click', () => {
-      gameScreen.classList.add('hidden');
-      mapScreen.classList.remove('hidden');
-      // Update URL back to root when leaving the slopes exercise
-      history.replaceState({ screen: 'map' }, '', '/');
-      trackScreenChange('map');
-      
-      // Stop sidebar character preview to conserve resources
-      stopSidebarCharacter();
-      
-      // Update solved count badge displays on map screen cards if needed
-      // (The map region cards are locked except Himalayan Slopes, but this is good futureproofing)
-    });
+    btnBackToMap.addEventListener('click', exitGameFn);
+  }
+  if (btnBackToMapMobile) {
+    btnBackToMapMobile.addEventListener('click', exitGameFn);
   }
 
   // 5. Open Customizer Modal from Map
