@@ -353,9 +353,9 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     if (elements.btnTryAnother) elements.btnTryAnother.classList.add('hidden');
   }
 
-  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, Level 3, and Level 4)
+  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, Level 3, Level 4, and Level 5)
   if (elements.controlPanel) {
-    if (levelId === 1 || levelId === 2 || levelId === 3 || levelId === 4) {
+    if (levelId === 1 || levelId === 2 || levelId === 3 || levelId === 4 || levelId === 5) {
       elements.controlPanel.classList.add('hidden');
     } else {
       elements.controlPanel.classList.remove('hidden');
@@ -379,7 +379,7 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     elements.currentCoordTag.classList.remove('hidden');
     if (elements.btnResetLvl4) elements.btnResetLvl4.classList.remove('hidden');
     if (elements.btnPlacePegLvl4) elements.btnPlacePegLvl4.classList.remove('hidden');
-  } else if (levelId === 5 || levelId === 6) {
+  } else if (levelId === 6) {
     if (elements.panelLvl5) elements.panelLvl5.classList.remove('hidden');
     // Reset sliders visual
     elements.sliderM.value = '1.0';
