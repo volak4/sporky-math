@@ -6,8 +6,9 @@ import { OUTFITS_DATA } from '../engine/outfits.js';
 import { trackLevelChange } from '../lib/sessionTracker.js';
 import { playPurchaseSound } from '../engine/audio.js';
 import { updateSidebarCharacterOutfit, initSidebarCharacter, stopSidebarCharacter } from '../engine/sidebarCharacter.js';
-import { updateClimberOutfit } from '../engine/climber.js';
+import { updateClimberOutfit, getClimberHovering } from '../engine/climber.js';
 import { updateWelcomeSporkyOutfit } from '../engine/welcomeSporky.js';
+import { getHolds, getCoordinateOffset } from '../engine/wall.js';
 
 // DOM Element Cache
 let elements = {};
@@ -395,27 +396,52 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
 }
 
 export function updateCoordinatesDisplay(x, y) {
-  const roundedX = Math.round(x);
-  const roundedY = Math.round(y);
+  let displayX = '?';
+  let displayY = '?';
+  
+  const isHovering = getClimberHovering && getClimberHovering();
+  
+  if (isHovering) {
+    const holds = getHolds();
+    let minDist = 0.60;
+    let nearest = null;
+    holds.forEach(hold => {
+      const offset = getCoordinateOffset(hold.userData.x, hold.userData.y);
+      const hx = hold.userData.x + offset.x;
+      const hy = hold.userData.y + offset.y;
+      const d = Math.sqrt((x - hx) ** 2 + (y - hy) ** 2);
+      if (d < minDist) {
+        minDist = d;
+        nearest = hold;
+      }
+    });
+    if (nearest) {
+      displayX = nearest.userData.x;
+      displayY = nearest.userData.y;
+    }
+  } else {
+    displayX = Math.round(x);
+    displayY = Math.round(y);
+  }
   
   if (elements.badgeX) {
-    elements.badgeX.textContent = roundedX;
-    elements.badgeY.textContent = roundedY;
+    elements.badgeX.textContent = displayX;
+    elements.badgeY.textContent = displayY;
   }
   if (elements.badgeXLvl2) {
-    elements.badgeXLvl2.textContent = roundedX;
-    elements.badgeYLvl2.textContent = roundedY;
+    elements.badgeXLvl2.textContent = displayX;
+    elements.badgeYLvl2.textContent = displayY;
   }
   if (elements.badgeXLvl3) {
-    elements.badgeXLvl3.textContent = roundedX;
-    elements.badgeYLvl3.textContent = roundedY;
+    elements.badgeXLvl3.textContent = displayX;
+    elements.badgeYLvl3.textContent = displayY;
   }
   if (elements.badgeXLvl4) {
-    elements.badgeXLvl4.textContent = roundedX;
-    elements.badgeYLvl4.textContent = roundedY;
+    elements.badgeXLvl4.textContent = displayX;
+    elements.badgeYLvl4.textContent = displayY;
   }
   if (elements.currentCoordText) {
-    elements.currentCoordText.textContent = `(${roundedX}, ${roundedY})`;
+    elements.currentCoordText.textContent = `(${displayX}, ${displayY})`;
   }
 }
 

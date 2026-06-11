@@ -108,7 +108,7 @@ export const levels = [
     title: "Plotting the Equation",
     description: "We've given you the equation y = mx + b. Find the y-intercept first, place a peg, and then follow the slope to place the second peg!",
     instructionText: "Drag Sporky to the y-intercept, click Place Peg. Then drag along the slope to the next point and click Place Peg again.",
-    startPos: { x: 4, y: 4 },
+    startPos: { x: 3.5, y: 4.8 },
     targetPos: { x: 0, y: 0 },
     showGridLines: true,
     setupHolds: function(scene, createHold) {

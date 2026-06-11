@@ -444,7 +444,7 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     level4State.interceptLabel = null;
     level4State.destLabel = null;
 
-    level.startPos = { x: 4, y: 4 };
+    level.startPos = { x: 3.5, y: 4.8 };
     level.targetPos = { x: 0, y: bVal };
 
     const eqHTML = formatEquationHTML(riseVal, runVal, bVal);
