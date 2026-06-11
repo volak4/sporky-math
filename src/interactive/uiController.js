@@ -320,6 +320,16 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
   // Update Header details
   elements.levelIndicator.textContent = `Challenge ${levelId} of ${levels.length}`;
   elements.challengeTitle.textContent = title;
+
+  // Hide the challenge card entirely for Level 5 (keep only the control panel with sliders)
+  const challengeCard = document.getElementById('challenge-card');
+  if (challengeCard) {
+    if (levelId === 5) {
+      challengeCard.classList.add('hidden');
+    } else {
+      challengeCard.classList.remove('hidden');
+    }
+  }
   elements.challengeDesc.innerHTML = desc;
 
   // Update solved badge
@@ -353,9 +363,9 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     if (elements.btnTryAnother) elements.btnTryAnother.classList.add('hidden');
   }
 
-  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, Level 3, Level 4, and Level 5)
+  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, Level 3, and Level 4)
   if (elements.controlPanel) {
-    if (levelId === 1 || levelId === 2 || levelId === 3 || levelId === 4 || levelId === 5) {
+    if (levelId === 1 || levelId === 2 || levelId === 3 || levelId === 4) {
       elements.controlPanel.classList.add('hidden');
     } else {
       elements.controlPanel.classList.remove('hidden');
@@ -379,7 +389,7 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     elements.currentCoordTag.classList.remove('hidden');
     if (elements.btnResetLvl4) elements.btnResetLvl4.classList.remove('hidden');
     if (elements.btnPlacePegLvl4) elements.btnPlacePegLvl4.classList.remove('hidden');
-  } else if (levelId === 6) {
+  } else if (levelId === 5 || levelId === 6) {
     if (elements.panelLvl5) elements.panelLvl5.classList.remove('hidden');
     // Reset sliders visual
     elements.sliderM.value = '1.0';
