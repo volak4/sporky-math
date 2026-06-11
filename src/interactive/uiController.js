@@ -552,7 +552,7 @@ export function setTargetEquationLvl4(rise, run, b) {
     const riseNum = `<span style="color: #000000;">${Math.abs(simplifiedRise)}</span>`;
     const runSign = simplifiedRun < 0 ? '<span style="color: #ef4444;">-</span>' : '';
     const runNum = `<span style="color: #000000;">${Math.abs(simplifiedRun)}</span>`;
-    hintEl.innerHTML = `💡 Slope = <span style="font-weight:700;"><sup>${riseSign}${riseNum}</sup>&frasl;<sub>${runSign}${runNum}</sub></span> <span style="opacity:0.7;">(rise / run)</span>`;
+    hintEl.innerHTML = `💡 Slope = <span style="font-weight:700;"><sup>${riseSign}${riseNum}</sup>&frasl;<sub>${runSign}${runNum}</sub></span> <span style="opacity:0.7;">(<span style="color: #ca8a04; font-weight: 700;">up</span>/<span style="color: #ef4444; font-weight: 700;">down</span> &frasl; <span style="color: #ef4444; font-weight: 700;">left</span>/<span style="color: #16a34a; font-weight: 700;">right</span>)</span>`;
   }
 }
 

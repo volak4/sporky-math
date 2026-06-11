@@ -153,7 +153,7 @@ function formatSlopeHintHTML(rise, run) {
   const runSignHTML = simplifiedRun < 0 ? '<span style="color: #ef4444;">-</span>' : '';
   const runNumHTML = `<span style="color: #000000;">${Math.abs(simplifiedRun)}</span>`;
 
-  return `<span style="display:block; margin-top:4px; font-size:0.95rem; font-weight:600; color:#64748b;">💡 Slope = <span style="font-weight:700;"><sup>${riseSignHTML}${riseNumHTML}</sup>&frasl;<sub>${runSignHTML}${runNumHTML}</sub></span> <span style="opacity:0.7;">(rise / run)</span></span>`;
+  return `<span style="display:block; margin-top:4px; font-size:0.95rem; font-weight:600; color:#64748b;">💡 Slope = <span style="font-weight:700;"><sup>${riseSignHTML}${riseNumHTML}</sup>&frasl;<sub>${runSignHTML}${runNumHTML}</sub></span> <span style="opacity:0.7;">(<span style="color: #ca8a04; font-weight: 700;">up</span>/<span style="color: #ef4444; font-weight: 700;">down</span> &frasl; <span style="color: #ef4444; font-weight: 700;">left</span>/<span style="color: #16a34a; font-weight: 700;">right</span>)</span></span>`;
 }
 
 export function loadLevel(levelIndex, preserveSolvedCount = false) {
@@ -447,6 +447,9 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     level.startPos = { x: 3.5, y: 4.8 };
     level.targetPos = { x: 0, y: bVal };
 
+    const btnPlace = document.getElementById('btn-place-peg-lvl4');
+    if (btnPlace) btnPlace.textContent = 'Drop Sporky';
+
     const eqHTML = formatEquationHTML(riseVal, runVal, bVal);
     const hintHTML = formatSlopeHintHTML(riseVal, runVal);
     level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">First, drop Sporky on the y-intercept.</div>`;
@@ -599,7 +602,7 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
                 <div style="background: var(--color-border); width: 36px; height: 2.5px; margin: 3px 0;"></div>
                 <div style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center;"><span style="color: #000000;">1</span></div>
               </div>
-              <span style="font-size: 0.9rem; font-weight: 600; color: #64748b;">(rise / run)</span>
+              <span style="font-size: 0.9rem; font-weight: 600; color: #64748b;">(<span style="color: #ca8a04; font-weight: 700;">up</span>/<span style="color: #ef4444; font-weight: 700;">down</span> / <span style="color: #ef4444; font-weight: 700;">left</span>/<span style="color: #16a34a; font-weight: 700;">right</span>)</span>
             </div>
           `;
         }
@@ -1420,10 +1423,13 @@ export function placePegLvl4() {
       const hintHTML = formatSlopeHintHTML(level4State.rise, level4State.run);
       level.description = `<strong style="font-size: 1.45rem; display: block; margin-top: 4px; margin-bottom: 2px;">${eqHTML}</strong>${hintHTML}<div style="margin-top: 10px; font-weight: 700; font-size: 1.05rem;">Next, find the destination point and click Place Peg.</div>`;
       showLevelUI(level.id, level.title, level.description, level.instructionText);
-      
+
+      const btnPlace = document.getElementById('btn-place-peg-lvl4');
+      if (btnPlace) btnPlace.textContent = 'Place Peg';
+
       showToast(`Placed y-intercept peg! Now follow the slope.`);
     } else {
-      registerFailure(`Incorrect y-intercept! Drag Sporky to the y-intercept at (0, ${level4State.b}) and click Place Peg.`);
+      registerFailure(`Incorrect y-intercept! Drag Sporky to the y-intercept at (0, ${level4State.b}) and click Drop Sporky.`);
     }
   } else if (level4State.phase === 'slope') {
     // Accept ANY valid grid point on the line (not just one hardcoded destination)

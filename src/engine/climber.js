@@ -224,9 +224,20 @@ export function setClimberColor(hexColor) {
   if (leftArmMesh && leftArmMesh.material) {
     leftArmMesh.material.color.copy(limbColor);
   }
+
+  // Update parachute canopy color dynamically if it exists
+  if (canopyMesh && canopyMesh.material) {
+    const sporkyColor = new THREE.Color(hexColor);
+    const hsl = { h: 0, s: 0, l: 0 };
+    sporkyColor.getHSL(hsl);
+    const compColor = new THREE.Color();
+    compColor.setHSL((hsl.h + 0.5) % 1.0, hsl.s, hsl.l);
+    canopyMesh.material.color.copy(compColor);
+  }
 }
 
 let parachuteMesh = null;
+let canopyMesh = null;
 let isHoveringWithParachute = false;
 
 function buildParachute() {
@@ -234,14 +245,22 @@ function buildParachute() {
   
   // 1. Canopy (hemisphere)
   const canopyGeo = new THREE.SphereGeometry(0.55, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+  
+  // Calculate complementary color dynamically from bodyMesh color
+  const sporkyColor = bodyMesh ? bodyMesh.material.color.clone() : new THREE.Color('#06b6d4');
+  const hsl = { h: 0, s: 0, l: 0 };
+  sporkyColor.getHSL(hsl);
+  const compColor = new THREE.Color();
+  compColor.setHSL((hsl.h + 0.5) % 1.0, hsl.s, hsl.l);
+
   const canopyMat = new THREE.MeshToonMaterial({
-    color: '#f97316', // Sunset Orange
+    color: compColor,
     side: THREE.DoubleSide,
     gradientMap: getToonGradientTexture()
   });
-  const canopy = new THREE.Mesh(canopyGeo, canopyMat);
-  canopy.position.set(0, 0.9, 0); // Positioned above the climber
-  group.add(canopy);
+  canopyMesh = new THREE.Mesh(canopyGeo, canopyMat);
+  canopyMesh.position.set(0, 0.9, 0); // Positioned above the climber
+  group.add(canopyMesh);
   
   // 2. White stripe/band on the canopy for detail
   const stripeGeo = new THREE.SphereGeometry(0.56, 16, 6, 0, Math.PI * 2, 0.3, 0.2);
