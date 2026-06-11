@@ -379,7 +379,30 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     level.startPos = startPos;
     level.targetPos = targetPos;
 
-    level.description = `Sporky starts at <strong class="highlight-coord" style="background:#e2e8f0; border-color:#1e293b;">(${startPos.x}, ${startPos.y})</strong>.<br/>Drag Sporky to the stop peg at <strong class="highlight-coord" style="background:#fef3c7; border-color:#d97706;">(${targetPos.x}, ${targetPos.y})</strong>, then calculate and enter the slope!`;
+    const slopeDisplayHTML = `
+      <div id="slope-value-display-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; padding: 0 4px;">
+        <input type="number" id="input-rise-lvl3" class="cartoon-number-input" placeholder="?" style="width: 60px; padding: 4px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.2rem; text-align: center; height: 32px; box-sizing: border-box; background: #ffffff; color: #ca8a04;" />
+        <div style="background: var(--color-border); width: 50px; height: 3px; margin: 5px 0;"></div>
+        <input type="number" id="input-run-lvl3" class="cartoon-number-input" placeholder="?" style="width: 60px; padding: 4px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.2rem; text-align: center; height: 32px; box-sizing: border-box; background: #ffffff; color: #16a34a;" />
+      </div>
+    `;
+
+    level.description = `
+      <div style="margin-bottom: 8px;">
+        <span style="font-weight: 700; font-size: 1.15rem;">Sporky starts at <strong class="highlight-coord" style="background:#e2e8f0; border-color:#1e293b;">(${startPos.x}, ${startPos.y})</strong></span>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <span style="font-weight: 700; font-size: 1.15rem;">Drag to red peg at <strong class="highlight-coord" style="background:#fef3c7; border-color:#d97706;">(${targetPos.x}, ${targetPos.y})</strong></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 12px; margin-bottom: 12px; font-family: inherit;">
+        <div style="font-weight: 700; font-size: 1.35rem; color: var(--color-border); white-space: nowrap;">Slope =</div>
+        ${slopeDisplayHTML}
+        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 76px; font-size: 0.88rem; font-weight: 700; color: #475569; padding-left: 4px; line-height: 1.2; flex: 1; min-width: 120px;">
+          <div style="min-height: 32px; padding-top: 2px;">&larr; how far <span style="color: #ca8a04;">up</span> or <span style="color: #ef4444;">down</span>?</div>
+          <div style="min-height: 32px; padding-top: 4px;">&larr; how far <span style="color: #ef4444;">left</span> or <span style="color: #16a34a;">right</span>?</div>
+        </div>
+      </div>
+    `;
   } else if (currentLevelIndex === 3) {
     let attempts = 0;
     let bVal = 0;
@@ -1032,7 +1055,7 @@ export function submitLevel3Slope() {
     if (validation.reason === "position") {
       const currentX = Math.round(climberPos.x);
       const currentY = Math.round(climberPos.y);
-      registerFailure(`Sporky is at (${currentX}, ${currentY}), but needs to reach stop peg (${level.targetPos.x}, ${level.targetPos.y}) first!`);
+      registerFailure(`Sporky is at (${currentX}, ${currentY}), but needs to reach red peg (${level.targetPos.x}, ${level.targetPos.y}) first!`);
     } else {
       registerFailure(`Incorrect slope! Calculate the rise (change in y) and run (change in x) from starting point (${level.startPos.x}, ${level.startPos.y}) to stop point (${level.targetPos.x}, ${level.targetPos.y}).`);
     }

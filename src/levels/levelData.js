@@ -61,7 +61,7 @@ export const levels = [
   {
     id: 3,
     title: "Calculate the Slope",
-    description: "Drag Sporky directly to the stop peg, then calculate and type the slope (Rise and Run).",
+    description: "Drag Sporky directly to the red peg, then calculate and type the slope (Rise and Run).",
     instructionText: "Drag Sporky, then type the slope and click Submit Slope.",
     startPos: { x: -3, y: -2 },
     targetPos: { x: 1, y: 2 },

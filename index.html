@@ -263,10 +263,6 @@
       <aside id="ui-sidebar" class="sidebar-panel">
         <div class="sidebar-scroll-content">
           
-          <!-- Exit/Back Button to return to map -->
-          <button id="btn-back-to-map" class="btn btn-secondary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.95rem; padding: 8px 12px; margin-bottom: 4px;">
-            &larr; Exit to Map 🗺️
-          </button>
 
           <!-- Header Bar -->
           <header id="game-header">
@@ -278,6 +274,7 @@
               </div>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
+              <button id="btn-open-shop-mobile" class="btn btn-secondary" style="font-size: 0.85rem; padding: 4px 8px; border-radius: 8px;">🛍️ Shop</button>
               <div id="game-coin-counter" class="coin-chip">💰 <span id="game-coins-val">0</span></div>
               <div id="game-streak-counter" class="streak-chip hidden">🔥 <span id="game-streak-val">0</span></div>
             </div>
@@ -294,6 +291,9 @@
               <div id="current-climber-coord" class="coord-tag hidden" style="margin-top: 0; width: auto; flex-grow: 1; padding: 3px 12px; font-size: 0.85rem; height: 32px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;">
                 Sporky is at: <strong id="current-coord-text" style="margin-left: 4px;">(0, 0)</strong>
               </div>
+              <button id="btn-submit-slope-card" class="btn btn-primary btn-pulse hidden" style="margin-top: 0; flex-grow: 1; height: 32px; font-size: 0.85rem; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700;">
+                Submit Slope
+              </button>
             </div>
 
             <!-- "Try another problem" button (Level 1) moved here -->
@@ -335,18 +335,8 @@
 
             <!-- Controls for Level 3 (Calculate Slope) -->
             <div id="controls-level-3" class="control-group hidden">
-              <p class="control-instruction">Drag Sporky to the stop peg, then calculate and type the slope (Rise and Run)!</p>
+              <p class="control-instruction">Drag Sporky to the red peg, calculate the slope, and enter it in the boxes above!</p>
               
-              <div class="slope-calculator-inputs" style="background: #f8fafc; border: 3px solid var(--color-border); border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <span class="coord-label" style="color: var(--color-rise, #eab308); font-weight: 700;">Rise (Δy) [up/down]:</span>
-                  <input type="number" id="input-rise-lvl3" class="cartoon-number-input" placeholder="0" style="width: 70px; padding: 6px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.1rem; text-align: center;" />
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <span class="coord-label" style="color: var(--color-run, #22c55e); font-weight: 700;">Run (Δx) [left/right]:</span>
-                  <input type="number" id="input-run-lvl3" class="cartoon-number-input" placeholder="1" style="width: 70px; padding: 6px; border: 3px solid var(--color-border); border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 1.1rem; text-align: center;" />
-                </div>
-              </div>
 
               <!-- Coordinates Badge -->
               <div class="coordinates-badge" style="margin-top: 4px; margin-bottom: 4px;">
@@ -430,22 +420,27 @@
               Go shopping 🛍️
             </button>
           </section>
-
-          <!-- Level Navigation (Back/Next footer) -->
-          <footer id="level-nav">
-            <button id="btn-prev-level" class="btn btn-nav" disabled>&larr; Back</button>
-            <button id="btn-open-shop-mobile" class="btn btn-nav">Go Shopping 🛍️</button>
-            <button id="btn-next-level" class="btn btn-nav">Next &rarr;</button>
-          </footer>
-
         </div>
       </aside>
 
       <!-- Right/Main Three.js Canvas Container -->
       <main id="canvas-container" class="canvas-panel">
-        <button id="btn-back-to-map-mobile" class="floating-exit-btn" title="Exit to Map">
-          🗺️ <span class="exit-btn-text">Exit to Map</span>
-        </button>
+        <div class="canvas-nav-overlay">
+          <!-- Exit to Map Button -->
+          <button id="btn-back-to-map" class="btn btn-secondary btn-canvas-nav">
+            🗺️ Exit to Map
+          </button>
+          
+          <!-- Prev Button -->
+          <button id="btn-prev-level" class="btn btn-secondary btn-canvas-nav" disabled>
+            &larr; Back
+          </button>
+          
+          <!-- Next Button -->
+          <button id="btn-next-level" class="btn btn-primary btn-pulse btn-canvas-nav">
+            Next &rarr;
+          </button>
+        </div>
       </main>
 
       <!-- Feedback & Celebratory Toast Banner (Floating over everything) -->

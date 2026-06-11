@@ -38,7 +38,6 @@ export async function initNavigation() {
   const btnEnterGame = document.getElementById('btn-enter-game');
   const btnBackToWelcome = document.getElementById('btn-back-to-welcome');
   const btnBackToMap = document.getElementById('btn-back-to-map');
-  const btnBackToMapMobile = document.getElementById('btn-back-to-map-mobile');
   const btnOpenCustomizer = document.getElementById('btn-open-customizer');
   const btnCloseCustomizer = document.getElementById('btn-close-customizer');
   
@@ -187,9 +186,6 @@ export async function initNavigation() {
 
   if (btnBackToMap) {
     btnBackToMap.addEventListener('click', exitGameFn);
-  }
-  if (btnBackToMapMobile) {
-    btnBackToMapMobile.addEventListener('click', exitGameFn);
   }
 
   // 5. Open Customizer Modal from Map

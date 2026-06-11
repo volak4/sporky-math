@@ -526,21 +526,7 @@ body {
   animation: button-pulse 2s infinite;
 }
 
-/* --- Navigation Footer inside Sidebar --- */
-#level-nav {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: auto; /* Push to bottom of sidebar */
-  padding-top: 10px;
-  border-top: 2px dashed #cbd5e1;
-}
-
-.btn-nav {
-  padding: 6px 14px;
-  font-size: 0.95rem;
-  background: #fff;
-}
+/* Unused Sidebar Navigation styles removed */
 
 /* --- Toast Banner Notification --- */
 .toast {
@@ -693,10 +679,6 @@ body {
     padding: 4px;
   }
 
-  #level-nav {
-    margin-top: 6px;
-    padding-top: 4px;
-  }
 
   .canvas-panel, #canvas-container {
     width: 100% !important;
@@ -2617,13 +2599,64 @@ body {
     height: 100px;
   }
 
-  /* Hide the large Exit to Map button from the top of the sidebar on mobile */
-  #btn-back-to-map {
-    display: none !important;
-  }
+}
 
-  /* Show the floating map exit button on the canvas on mobile */
-  .floating-exit-btn {
-    display: flex !important;
+/* Level 3 Custom input placeholder styling */
+#input-rise-lvl3::placeholder {
+  color: #ca8a04 !important;
+  opacity: 1 !important;
+}
+
+#input-run-lvl3::placeholder {
+  color: #16a34a !important;
+  opacity: 1 !important;
+}
+
+/* --- Canvas Navigation Overlay --- */
+.canvas-nav-overlay {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.btn-canvas-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.9rem !important;
+  padding: 6px 12px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-canvas-nav.btn-secondary {
+  background: #ffffff !important;
+  color: var(--color-border) !important;
+  border: 3px solid var(--color-border) !important;
+}
+
+@media (max-width: 480px) {
+  .canvas-nav-overlay {
+    top: 8px;
+    left: 8px;
+    gap: 6px;
+  }
+  
+  .btn-canvas-nav {
+    font-size: 0.8rem !important;
+    padding: 4px 10px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    border-width: 2px !important;
   }
 }
+

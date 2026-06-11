@@ -72,6 +72,7 @@ export function initUI() {
     inputRunLvl3: document.getElementById('input-run-lvl3'),
     btnResetSlopeLvl3: document.getElementById('btn-reset-slope-lvl3'),
     btnSubmitSlopeLvl3: document.getElementById('btn-submit-slope-lvl3'),
+    btnSubmitSlopeCard: document.getElementById('btn-submit-slope-card'),
     badgeXLvl3: document.getElementById('badge-x-val-lvl3'),
     badgeYLvl3: document.getElementById('badge-y-val-lvl3'),
     
@@ -163,6 +164,23 @@ function bindEvents() {
     elements.btnSubmitSlopeLvl3.addEventListener('click', () => {
       hideToast();
       submitLevel3Slope();
+    });
+  }
+  if (elements.btnSubmitSlopeCard) {
+    elements.btnSubmitSlopeCard.addEventListener('click', () => {
+      hideToast();
+      submitLevel3Slope();
+    });
+  }
+  if (elements.challengeDesc) {
+    elements.challengeDesc.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (e.target && (e.target.id === 'input-rise-lvl3' || e.target.id === 'input-run-lvl3')) {
+          e.preventDefault();
+          hideToast();
+          submitLevel3Slope();
+        }
+      }
     });
   }
 
@@ -323,6 +341,7 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
   elements.panelLvl4.classList.add('hidden');
   if (elements.panelLvl5) elements.panelLvl5.classList.add('hidden');
   elements.currentCoordTag.classList.add('hidden');
+  if (elements.btnSubmitSlopeCard) elements.btnSubmitSlopeCard.classList.add('hidden');
 
   // Toggle Level 1 "Try another problem" button inside challenge card
   if (levelId === 1) {
@@ -331,9 +350,9 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     if (elements.btnTryAnother) elements.btnTryAnother.classList.add('hidden');
   }
 
-  // Toggle outer control panel card visibility (hidden entirely for Level 1 and Level 2)
+  // Toggle outer control panel card visibility (hidden entirely for Level 1, Level 2, and Level 3)
   if (elements.controlPanel) {
-    if (levelId === 1 || levelId === 2) {
+    if (levelId === 1 || levelId === 2 || levelId === 3) {
       elements.controlPanel.classList.add('hidden');
     } else {
       elements.controlPanel.classList.remove('hidden');
@@ -348,9 +367,11 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     elements.currentCoordTag.classList.remove('hidden');
   } else if (levelId === 3) {
     elements.panelLvl3.classList.remove('hidden');
-    elements.currentCoordTag.classList.remove('hidden');
-    if (elements.inputRiseLvl3) elements.inputRiseLvl3.value = '';
-    if (elements.inputRunLvl3) elements.inputRunLvl3.value = '';
+    if (elements.btnSubmitSlopeCard) elements.btnSubmitSlopeCard.classList.remove('hidden');
+    const inputRise = document.getElementById('input-rise-lvl3');
+    const inputRun = document.getElementById('input-run-lvl3');
+    if (inputRise) inputRise.value = '';
+    if (inputRun) inputRun.value = '';
   } else if (levelId === 4) {
     elements.panelLvl4.classList.remove('hidden');
     elements.currentCoordTag.classList.remove('hidden');
