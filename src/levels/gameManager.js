@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { levels, generateRealWorldProblem } from './levelData.js';
-import { createClimbingWall, setGridVisibility, createHold, clearHolds, getHolds, getToonGradientTexture, getCoordinateOffset, isInsideMountain, setDestinationLabel, createSlopeValueLabel, createSignLabel } from '../engine/wall.js';
+import { levels } from './levelData.js';
+import { createClimbingWall, setGridVisibility, setMountainVisibility, createHold, clearHolds, getHolds, getToonGradientTexture, getCoordinateOffset, isInsideMountain, setDestinationLabel, createSlopeValueLabel, createSignLabel } from '../engine/wall.js';
 import { createClimber, setClimberPosition, animateToPosition, updateClimber, getClimberGroup, getClimberPosition, setClimberExpression, setClimberHovering } from '../engine/climber.js';
 import { playSuccessSound, playFailureSound } from '../engine/audio.js';
 import { setDragEnabled } from '../interactive/dragManager.js';
@@ -51,6 +51,10 @@ let level4State = {
 let level5InterceptDot = null;
 let level5InterceptLabel = null;
 let level5SlopeLabel = null;
+
+// Level 6 Graph Overlays
+let level6GraphLine = null;
+let level6GraphDots = [];
 
 // Helper to choose a random valid coordinate for Level 1 that isn't the origin or the excluded coordinate
 function getRandomTargetCoordinateExcluding(exclude) {
@@ -528,47 +532,14 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     
     level.description = `Adjust the slope (m) and y-intercept (b) to align the laser route so it passes through all yellow target holds!`;
   } else if (currentLevelIndex === 5) {
-    let problem = generateRealWorldProblem();
-    let targets = [];
-    let attempts = 0;
-    while (attempts < 200) {
-      attempts++;
-      targets = [];
-      for (let x = -4; x <= 4; x++) {
-        const y = problem.m * x + problem.b;
-        const ry = Math.round(y);
-        if (Math.abs(y - ry) < 0.01 && ry >= -4 && ry <= 4 && isInsideMountain(x, ry)) {
-          targets.push({ x, y: ry });
-        }
-      }
-      if (targets.length >= 3) {
-        break;
-      }
-      problem = generateRealWorldProblem();
-    }
+    // Generate a random slope and y-intercept for the graph
+    const possibleSlopes = [-2, -1, -0.5, 0.5, 1, 2];
+    const possibleIntercepts = [-3, -2, -1, 0, 1, 2, 3];
+    const chosenM = possibleSlopes[Math.floor(Math.random() * possibleSlopes.length)];
+    const chosenB = possibleIntercepts[Math.floor(Math.random() * possibleIntercepts.length)];
     
-    level.targetEquation = { m: problem.m, b: problem.b };
-    level.generatedTargets = targets;
-    
-    const sorted = [...targets].sort((a, b) => a.x - b.x);
-    level.startPos = sorted[0];
-    
-    level.generatedDecoys = [];
-    let decoyAttempts = 0;
-    while (level.generatedDecoys.length < 4 && decoyAttempts < 100) {
-      decoyAttempts++;
-      const dx = Math.floor(Math.random() * 9) - 4;
-      const dy = Math.floor(Math.random() * 9) - 4;
-      if (!isInsideMountain(dx, dy)) continue;
-      const expectedY = problem.m * dx + problem.b;
-      if (Math.abs(dy - expectedY) < 0.5) continue;
-      if (targets.some(t => t.x === dx && t.y === dy)) continue;
-      if (level.generatedDecoys.some(d => d.x === dx && d.y === dy)) continue;
-      if (dx === level.startPos.x && dy === level.startPos.y) continue;
-      level.generatedDecoys.push({ x: dx, y: dy });
-    }
-    
-    level.description = problem.text;
+    level.targetEquation = { m: chosenM, b: chosenB };
+    level.description = 'Look at the graph and type the slope and y-intercept.';
   }
 
   // Holds and overlays already cleared above (before level-specific setup)
@@ -576,14 +547,27 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
   // 2. Setup the wall grid lines and axes visibility
   setGridVisibility(level.showGridLines);
 
+  // 2b. Toggle mountain and climber visibility for Level 6
+  if (level.id === 6) {
+    setMountainVisibility(false);
+    const climberGroup = getClimberGroup();
+    if (climberGroup) climberGroup.visible = false;
+  } else {
+    setMountainVisibility(true);
+    const climberGroup = getClimberGroup();
+    if (climberGroup) climberGroup.visible = true;
+  }
+
   // 3. Create this level's holds
   level.setupHolds(sceneObj, createHold);
 
-  // 4. Place climber at starting position
-  setClimberPosition(level.startPos.x, level.startPos.y);
-  updateCoordinatesDisplay(level.startPos.x, level.startPos.y);
-  lastSnappedPos = { x: level.startPos.x, y: level.startPos.y };
-  activeDragPath = [{ x: level.startPos.x, y: level.startPos.y }];
+  // 4. Place climber at starting position (skip for Level 6 — no climber)
+  if (level.id !== 6) {
+    setClimberPosition(level.startPos.x, level.startPos.y);
+    updateCoordinatesDisplay(level.startPos.x, level.startPos.y);
+    lastSnappedPos = { x: level.startPos.x, y: level.startPos.y };
+    activeDragPath = [{ x: level.startPos.x, y: level.startPos.y }];
+  }
 
   // 5. Update HTML UI elements
   showLevelUI(level.id, level.title, level.description, level.instructionText);
@@ -598,12 +582,6 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
           const riseNumHTML = `<span style="color: #000000;">${Math.abs(riseVal)}</span>`;
           slopeHintDisplayEl.innerHTML = `
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; margin-bottom: 12px;">
-              <span style="font-weight: 700; font-size: 0.95rem; color: #64748b;">Hint: m = </span>
-              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; padding: 0 4px;">
-                <div style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center;">${riseSignHTML}${riseNumHTML}</div>
-                <div style="background: var(--color-border); width: 36px; height: 2.5px; margin: 3px 0;"></div>
-                <div style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center;"><span style="color: #000000;">1</span></div>
-              </div>
               <span style="font-size: 0.9rem; font-weight: 600; color: #64748b;">(<span style="color: #ca8a04; font-weight: 700;">up</span>/<span style="color: #ef4444; font-weight: 700;">down</span> / <span style="color: #ef4444; font-weight: 700;">left</span>/<span style="color: #16a34a; font-weight: 700;">right</span>)</span>
             </div>
           `;
@@ -631,14 +609,13 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
   // 6. Level specific interaction configuration
   if (level.id === 1 || level.id === 2 || level.id === 3 || level.id === 4) {
     setDragEnabled(true);
-  } else {
-    // Disable direct dragging for level 5 & 6 (y=mx+b)
+  } else if (level.id === 5) {
     setDragEnabled(false);
-    
-    // Trigger initial overlays
-    if (level.id === 5 || level.id === 6) {
-      updateEquationLaserOverlay(1.0, 0);
-    }
+    updateEquationLaserOverlay(1.0, 0);
+  } else if (level.id === 6) {
+    setDragEnabled(false);
+    // Draw the graph line for Level 6
+    drawLevel6GraphLine(level.targetEquation.m, level.targetEquation.b);
   }
 }
 
@@ -1525,6 +1502,98 @@ export function placePegLvl4() {
   }
 }
 
+// --- Level 6: Draw a static graph line with plotted dots ---
+function drawLevel6GraphLine(m, b) {
+  // Remove previous level 6 graph objects
+  clearLevel6Graph();
+
+  // Draw the line spanning the full grid
+  const x1 = -5.5;
+  const y1 = m * x1 + b;
+  const x2 = 5.5;
+  const y2 = m * x2 + b;
+
+  const pA = new THREE.Vector3(x1, y1, -0.11);
+  const pB = new THREE.Vector3(x2, y2, -0.11);
+
+  level6GraphLine = createCylinderBetweenPoints(pA, pB, 0.05, '#a78bfa'); // Purple line
+  sceneObj.add(level6GraphLine);
+
+  // Plot dots at integer x coordinates where y is also integer and within grid
+  for (let x = -5; x <= 5; x++) {
+    const y = m * x + b;
+    const ry = Math.round(y);
+    if (Math.abs(y - ry) < 0.01 && ry >= -5 && ry <= 5) {
+      const dotGeo = new THREE.SphereGeometry(0.16, 16, 16);
+      const dotMat = new THREE.MeshToonMaterial({
+        color: '#eab308', // Yellow
+        gradientMap: getToonGradientTexture()
+      });
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      dot.position.set(x, ry, -0.08);
+      dot.castShadow = true;
+      sceneObj.add(dot);
+      level6GraphDots.push(dot);
+    }
+  }
+}
+
+function clearLevel6Graph() {
+  if (level6GraphLine) {
+    sceneObj.remove(level6GraphLine);
+    if (level6GraphLine.geometry) level6GraphLine.geometry.dispose();
+    if (level6GraphLine.material) level6GraphLine.material.dispose();
+    level6GraphLine = null;
+  }
+  level6GraphDots.forEach(dot => {
+    sceneObj.remove(dot);
+    if (dot.geometry) dot.geometry.dispose();
+    if (dot.material) dot.material.dispose();
+  });
+  level6GraphDots = [];
+}
+
+export function submitLevel6Answer(mStr, bStr) {
+  const level = levels[currentLevelIndex];
+  if (level.id !== 6) return;
+
+  // Parse the user's input — accept fractions like "1/2" or decimals like "0.5"
+  const parseInput = (str) => {
+    str = str.trim();
+    if (str.includes('/')) {
+      const parts = str.split('/');
+      if (parts.length === 2) {
+        const num = parseFloat(parts[0]);
+        const den = parseFloat(parts[1]);
+        if (!isNaN(num) && !isNaN(den) && den !== 0) return num / den;
+      }
+    }
+    return parseFloat(str);
+  };
+
+  const mVal = parseInput(mStr);
+  const bVal = parseInput(bStr);
+
+  if (isNaN(mVal) || isNaN(bVal)) {
+    showToast('Please enter valid numbers for slope and y-intercept.', true, 3000);
+    return;
+  }
+
+  const target = level.targetEquation;
+  if (Math.abs(mVal - target.m) < 0.01 && Math.abs(bVal - target.b) < 0.01) {
+    challenge6SolvedCount++;
+    registerSuccess(5, '✅ Correct! Great job reading the graph!');
+    setNextButtonUnlocked(true);
+    
+    // Generate a new problem after a short delay
+    setTimeout(() => {
+      loadLevel(currentLevelIndex, true);
+    }, 2500);
+  } else {
+    registerFailure('❌ Not quite. Look at the graph and try again.');
+  }
+}
+
 // Clean up WebGL overlays
 function clearOverlays() {
   if (ropeMesh) { sceneObj.remove(ropeMesh); ropeMesh = null; }
@@ -1554,6 +1623,8 @@ function clearOverlays() {
     level5SlopeLabel.material.dispose();
     level5SlopeLabel = null;
   }
+  // Level 6 cleanup
+  clearLevel6Graph();
 }
 
 export async function registerSuccess(index, successMsg) {

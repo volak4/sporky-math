@@ -1,5 +1,5 @@
 // Controller for the HTML UI Overlays and HUD inputs
-import { changeLevel, resetLevel, getGameState, submitSlopePosition, submitLevel3Slope, testRoute, shuffleTargetCoordinate, placePegLvl4 } from '../levels/gameManager.js';
+import { changeLevel, resetLevel, getGameState, submitSlopePosition, submitLevel3Slope, testRoute, shuffleTargetCoordinate, placePegLvl4, submitLevel6Answer } from '../levels/gameManager.js';
 import { levels } from '../levels/levelData.js';
 import { getLocalSolvedCount, getCoins, purchaseOutfit, equipOutfit, unequipOutfit, getPurchasedOutfits, getActiveOutfits, getStreak } from '../lib/progressManager.js';
 import { OUTFITS_DATA } from '../engine/outfits.js';
@@ -55,6 +55,7 @@ export function initUI() {
     panelLvl3: document.getElementById('controls-level-3'),
     panelLvl4: document.getElementById('controls-level-4'),
     panelLvl5: document.getElementById('controls-level-5'),
+    panelLvl6: document.getElementById('controls-level-6'),
     
     // Level 1 Inputs
     badgeX: document.getElementById('badge-x-val'),
@@ -94,6 +95,11 @@ export function initUI() {
     formulaB: document.getElementById('formula-b'),
     btnClimbIntercept: document.getElementById('btn-climb-intercept'),
     btnResetIntercept: document.getElementById('btn-reset-intercept'),
+    
+    // Level 6 Inputs
+    inputMLvl6: document.getElementById('input-m-lvl6'),
+    inputBLvl6: document.getElementById('input-b-lvl6'),
+    btnSubmitLvl6: document.getElementById('btn-submit-lvl6'),
     
     // Toast & Footer Nav
     toast: document.getElementById('toast-banner'),
@@ -223,6 +229,39 @@ function bindEvents() {
     });
   }
 
+  // Level 6 - Submit equation answer
+  if (elements.btnSubmitLvl6) {
+    elements.btnSubmitLvl6.addEventListener('click', () => {
+      hideToast();
+      const mVal = elements.inputMLvl6 ? elements.inputMLvl6.value : '';
+      const bVal = elements.inputBLvl6 ? elements.inputBLvl6.value : '';
+      submitLevel6Answer(mVal, bVal);
+    });
+  }
+  // Enter key support for Level 6 inputs
+  if (elements.inputMLvl6) {
+    elements.inputMLvl6.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        hideToast();
+        const mVal = elements.inputMLvl6.value;
+        const bVal = elements.inputBLvl6 ? elements.inputBLvl6.value : '';
+        submitLevel6Answer(mVal, bVal);
+      }
+    });
+  }
+  if (elements.inputBLvl6) {
+    elements.inputBLvl6.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        hideToast();
+        const mVal = elements.inputMLvl6 ? elements.inputMLvl6.value : '';
+        const bVal = elements.inputBLvl6.value;
+        submitLevel6Answer(mVal, bVal);
+      }
+    });
+  }
+
   // Shop events
   const openShopFn = () => {
     activeShopTab = 'buy';
@@ -321,10 +360,10 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
   elements.levelIndicator.textContent = `Challenge ${levelId} of ${levels.length}`;
   elements.challengeTitle.textContent = title;
 
-  // Hide the challenge card entirely for Level 5 (keep only the control panel with sliders)
+  // Hide the challenge card entirely for Level 5 and Level 6
   const challengeCard = document.getElementById('challenge-card');
   if (challengeCard) {
-    if (levelId === 5) {
+    if (levelId === 5 || levelId === 6) {
       challengeCard.classList.add('hidden');
     } else {
       challengeCard.classList.remove('hidden');
@@ -351,6 +390,7 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
   elements.panelLvl3.classList.add('hidden');
   elements.panelLvl4.classList.add('hidden');
   if (elements.panelLvl5) elements.panelLvl5.classList.add('hidden');
+  if (elements.panelLvl6) elements.panelLvl6.classList.add('hidden');
   elements.currentCoordTag.classList.add('hidden');
   if (elements.btnSubmitSlopeCard) elements.btnSubmitSlopeCard.classList.add('hidden');
   if (elements.btnResetLvl4) elements.btnResetLvl4.classList.add('hidden');
@@ -389,7 +429,7 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     elements.currentCoordTag.classList.remove('hidden');
     if (elements.btnResetLvl4) elements.btnResetLvl4.classList.remove('hidden');
     if (elements.btnPlacePegLvl4) elements.btnPlacePegLvl4.classList.remove('hidden');
-  } else if (levelId === 5 || levelId === 6) {
+  } else if (levelId === 5) {
     if (elements.panelLvl5) elements.panelLvl5.classList.remove('hidden');
     // Reset sliders visual
     elements.sliderM.value = '1.0';
@@ -398,6 +438,11 @@ export function showLevelUI(levelId, title, desc, instruction, showGridLines) {
     elements.sliderBVal.textContent = '+0';
     elements.formulaM.textContent = '';
     elements.formulaB.textContent = '+ 0';
+  } else if (levelId === 6) {
+    if (elements.panelLvl6) elements.panelLvl6.classList.remove('hidden');
+    // Clear inputs
+    if (elements.inputMLvl6) elements.inputMLvl6.value = '';
+    if (elements.inputBLvl6) elements.inputBLvl6.value = '';
   }
 
   // Next/Prev footer button disabled states

@@ -448,6 +448,59 @@ body {
   margin-top: 4px;
 }
 
+/* Equation Input Builder (Level 6) */
+.equation-input-builder {
+  background: #f8fafc;
+  border: 3px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 6px;
+}
+
+.equation-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.eq-label {
+  color: var(--color-border);
+  font-family: 'Fredoka', sans-serif;
+  white-space: nowrap;
+}
+
+.eq-input {
+  width: 52px;
+  height: 38px;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  border: 3px solid var(--color-border);
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.eq-input:focus {
+  border-color: var(--color-slope);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+}
+
+.eq-input.slope-input-field:focus {
+  border-color: var(--color-slope);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+}
+
+.eq-input.intercept-input-field:focus {
+  border-color: var(--color-rise);
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.18);
+}
+
 /* --- Color utilities --- */
 .rise-color { color: var(--color-rise); }
 .run-color { color: var(--color-run); }

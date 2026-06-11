@@ -192,41 +192,19 @@ export const levels = [
   },
   {
     id: 6,
-    title: "Real-World Equations",
-    description: "Read the word problem, write the linear equation y = mx + b representing the scenario, and then test the route!",
-    instructionText: "Translate the problem into slope (m) and intercept (b). Click 'Test Route!' when ready.",
-    startPos: { x: -4, y: -1 },
+    title: "Find the Equation",
+    description: "Look at the graph and type the slope and y-intercept.",
+    instructionText: "Type the slope (m) and y-intercept (b) you see on the graph. Click 'Submit Answer' when ready.",
+    startPos: { x: 0, y: 0 },
     showGridLines: true,
-    targetEquation: { m: 0.5, b: 1 },
+    targetEquation: { m: 1, b: 0 },
     generatedTargets: [],
     generatedDecoys: [],
     setupHolds: function(scene, createHold) {
-      const targets = this.generatedTargets || [];
-      const decoys = this.generatedDecoys || [];
-      const start = this.startPos || { x: -4, y: -1 };
-
-      // Place start peg (first one on the line)
-      if (isInsideMountain(start.x, start.y)) {
-        createHold(scene, start.x, start.y, 'block', '#10b981');
-      }
-
-      // Place target star pegs
-      targets.forEach(t => {
-        if (t.x === start.x && t.y === start.y) return;
-        if (isInsideMountain(t.x, t.y)) {
-          createHold(scene, t.x, t.y, 'star', '#f59e0b', true);
-        }
-      });
-
-      // Place decoy crimp pegs
-      decoys.forEach(d => {
-        if (isInsideMountain(d.x, d.y)) {
-          createHold(scene, d.x, d.y, 'crimp', '#475569');
-        }
-      });
+      // No holds for this level — just a graph
     },
     validate: function(m, b) {
-      const target = this.targetEquation || { m: 0.5, b: 1 };
+      const target = this.targetEquation || { m: 1, b: 0 };
       return Math.abs(m - target.m) < 0.01 && Math.abs(b - target.b) < 0.01;
     }
   }

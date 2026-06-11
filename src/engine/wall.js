@@ -265,7 +265,7 @@ export function createClimbingWall(scene) {
     const offset = getCoordinateOffset(x, 0);
     const label = createNumberSprite(x.toString(), '#22c55e'); // Vibrant green color
     label.position.set(x + offset.x, 0 - 0.38 + offset.y, -0.14);
-    wallGroup.add(label);
+    axesGroup.add(label);
   }
 
   // Y-axis: numbers to the left in yellow
@@ -273,7 +273,7 @@ export function createClimbingWall(scene) {
     const offset = getCoordinateOffset(0, y);
     const label = createNumberSprite(y.toString(), '#eab308'); // Vibrant yellow color
     label.position.set(0 - 0.38 + offset.x, y + offset.y, -0.14);
-    wallGroup.add(label);
+    axesGroup.add(label);
   }
 
   scene.add(wallGroup);
@@ -284,6 +284,10 @@ export function createClimbingWall(scene) {
 export function setGridVisibility(visible) {
   gridLinesGroup.visible = visible;
   axesGroup.visible = visible;
+}
+
+export function setMountainVisibility(visible) {
+  wallGroup.visible = visible;
 }
 
 // Procedural climbing hold generator (with offsets applied)
