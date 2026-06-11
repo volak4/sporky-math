@@ -116,12 +116,16 @@ function formatEquationHTML(rise, run, b) {
   if (simplifiedRise === 1 && simplifiedRun === 1) {
     mStr = `<span class="run-color"></span>`;
   } else if (simplifiedRise === -1 && simplifiedRun === 1) {
-    mStr = `<span class="run-color">-</span>`;
+    mStr = `<span style="color: #ef4444;">-</span>`;
   } else if (simplifiedRun === 1) {
-    mStr = `<span class="run-color">${simplifiedRise}</span>`;
+    if (simplifiedRise < 0) {
+      mStr = `<span style="color: #ef4444;">-</span><span class="run-color">${Math.abs(simplifiedRise)}</span>`;
+    } else {
+      mStr = `<span class="run-color">${simplifiedRise}</span>`;
+    }
   } else {
     if (simplifiedRise < 0) {
-      mStr = `<span style="color: black;">-</span><span class="rise-color">${Math.abs(simplifiedRise)}</span><span style="color: black;">/</span><span class="run-color">${simplifiedRun}</span>`;
+      mStr = `<span style="color: #ef4444;">-</span><span class="rise-color">${Math.abs(simplifiedRise)}</span><span style="color: black;">/</span><span class="run-color">${simplifiedRun}</span>`;
     } else {
       mStr = `<span class="rise-color">${simplifiedRise}</span><span style="color: black;">/</span><span class="run-color">${simplifiedRun}</span>`;
     }
@@ -131,7 +135,7 @@ function formatEquationHTML(rise, run, b) {
   if (b > 0) {
     bStr = `<span class="rise-color">+ ${b}</span>`;
   } else if (b < 0) {
-    bStr = `<span class="rise-color">- ${Math.abs(b)}</span>`;
+    bStr = `<span style="color: #ef4444;">-</span> <span class="rise-color">${Math.abs(b)}</span>`;
   } else {
     bStr = `<span class="rise-color">+ 0</span>`;
   }
