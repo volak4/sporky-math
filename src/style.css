@@ -2559,14 +2559,15 @@ body {
   position: absolute;
   top: 15px;
   left: 15px;
-  width: 44px;
-  height: 44px;
+  height: 40px;
+  padding: 0 12px;
   background: #ffffff;
   border: 4px solid var(--color-border);
   border-radius: 12px;
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   justify-content: center;
   align-items: center;
+  gap: 6px;
   cursor: pointer;
   z-index: 1000;
   box-shadow: 2px 2px 0px var(--color-btn-shadow);
@@ -2576,6 +2577,13 @@ body {
 .floating-exit-btn:active {
   transform: translate(2px, 2px);
   box-shadow: 0px 0px 0px transparent;
+}
+
+.floating-exit-btn .exit-btn-text {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-text-dark);
+  font-family: inherit;
 }
 
 @media (max-width: 768px) {
