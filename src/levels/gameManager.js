@@ -388,11 +388,8 @@ export function loadLevel(levelIndex, preserveSolvedCount = false) {
     `;
 
     level.description = `
-      <div style="margin-bottom: 8px;">
-        <span style="font-weight: 700; font-size: 1.15rem;">Sporky starts at <strong class="highlight-coord" style="background:#e2e8f0; border-color:#1e293b;">(${startPos.x}, ${startPos.y})</strong></span>
-      </div>
       <div style="margin-bottom: 12px;">
-        <span style="font-weight: 700; font-size: 1.15rem;">Drag to red peg at <strong class="highlight-coord" style="background:#fef3c7; border-color:#d97706;">(${targetPos.x}, ${targetPos.y})</strong></span>
+        <span style="font-weight: 700; font-size: 1.15rem;">Drag Sporky to red peg at <strong class="highlight-coord" style="background:#fef3c7; border-color:#d97706;">(${targetPos.x}, ${targetPos.y})</strong></span>
       </div>
       <div style="display: flex; align-items: center; gap: 10px; margin-top: 12px; margin-bottom: 12px; font-family: inherit;">
         <div style="font-weight: 700; font-size: 1.35rem; color: var(--color-border); white-space: nowrap;">Slope =</div>
